@@ -1,0 +1,10 @@
+/glm
+/KHR
+/glfw
+/glad
+/build
+/.vscode
+glad.c
+stb_image.cpp
+stb_image.h
+/assets/textures/wall.jpg
