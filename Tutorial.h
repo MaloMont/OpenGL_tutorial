@@ -12,7 +12,7 @@
 
 #include "cmake_variables.h"
 #include "Callbacks.h"
-#include "Triangle.h"
+#include "Cube.h"
 #include "Shader.h"
 
 #include "debug_helper.h"
@@ -35,6 +35,9 @@ private:
     int WIN_WIDTH = 800, WIN_HEIGHT = 600;
 
     Shader shader;
+
+    // delying initialization to after the libraries are initialized
+    Cube cube_template = Cube(true);
 };
 
 #endif

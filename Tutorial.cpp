@@ -3,11 +3,18 @@
 Tutorial::Tutorial()
 {
     init_libraries();
+
     shader.load(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
+
+    cube_template.init();
+
+    cube_template.add_texture("../assets/textures/container.jpg", false);
+    cube_template.add_texture("../assets/textures/awesomeface.png", true);
 }
 
 Tutorial::~Tutorial()
 {
+    cube_template.destroy();
     glfwTerminate();
 }
 
@@ -75,23 +82,39 @@ void Tutorial::process_input()
  */
 void Tutorial::render_loop()
 {
-    Triangle my_triangle;
-    my_triangle.add_texture("../assets/textures/container.jpg", false);
-    my_triangle.add_texture("../assets/textures/awesomeface.png", true);
+    auto my_cube = cube_template.create_instance();
 
     shader.turn_on();
+
+    glEnable(GL_DEPTH_TEST);
 
     int value = 0;
     while(not glfwWindowShouldClose(window))
     {
-        value = value + 5;
+        value += 1;
         process_input();
 
         // rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        my_triangle.draw(shader);
+        glm::mat4 view = glm::mat4(1.0f);
+        // note that we're translating the scene in the reverse direction of where we want to move
+        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
+        shader.set_uniform("view", view);
+
+        glm::mat4 projection;
+        projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
+        shader.set_uniform("projection", projection);
+
+        cube_template.set_instance_rotation_angle(my_cube, glm::radians((float)value));
+        cube_template.set_instance_rotation_axis(my_cube,
+            glm::vec3(sin(glm::radians((float)value)) + 1.0f,
+                      sin(glm::radians((float)value)) + 1.0f,
+                      sin(glm::radians((float)value)) + 1.01f // to prevent [axis = (0, 0, 0)]
+                     ));
+
+        cube_template.draw(shader, my_cube);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

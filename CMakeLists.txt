@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(Tutorial)
-target_sources(Tutorial PRIVATE main.cpp Callbacks.cpp Shader.cpp Texture.cpp Triangle.cpp debug_helper.cpp Tutorial.cpp stb_image.cpp glad.c)
+target_sources(Tutorial PRIVATE main.cpp Callbacks.cpp Shader.cpp Texture.cpp Cube.cpp debug_helper.cpp Tutorial.cpp stb_image.cpp glad.c)
 
 # include glfw
 add_subdirectory(glfw)
