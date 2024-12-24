@@ -79,10 +79,6 @@ void Tutorial::render_loop()
     my_triangle.add_texture("../assets/textures/container.jpg", false);
     my_triangle.add_texture("../assets/textures/awesomeface.png", true);
 
-    Triangle my_triangle2;
-    my_triangle2.add_texture("../assets/textures/container.jpg", false);
-    my_triangle2.add_texture("../assets/textures/awesomeface.png", true);
-
     shader.turn_on();
 
     int value = 0;
@@ -95,18 +91,7 @@ void Tutorial::render_loop()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glm::mat4 trans = glm::mat4(1.0f);
-        trans = glm::rotate(trans, (float)value * 0.001f, glm::vec3(0.5f, 0.5f, 1.0f));
-        shader.set_uniform("transform", trans);
-
         my_triangle.draw(shader);
-
-        trans = glm::mat4(1.0f);
-        trans = glm::translate(trans, glm::vec3(-0.75f, 0.75f, 0.0f));
-        trans = glm::scale(trans, glm::vec3(sin(value / 360.0f * M_PI_2) * 0.5f, sin(value / 360.0f * M_PI_2) * 0.5f, sin(value / 360.0f * M_PI_2) * 0.5f));  
-        shader.set_uniform("transform", trans);
-
-        my_triangle2.draw(shader);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

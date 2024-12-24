@@ -100,6 +100,5 @@ void Texture::desactivate(const Shader& shader)
  */
 void Texture::destroy()
 {
-    std::cout << "texture destroyed" << std::endl;
     glDeleteTextures(1, &texture);
 }
