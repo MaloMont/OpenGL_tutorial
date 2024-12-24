@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.10)
+
+project(Tutorial VERSION 1.0)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
+add_executable(Tutorial)
+target_sources(Tutorial PRIVATE main.cpp Callbacks.cpp Shader.cpp Texture.cpp Triangle.cpp debug_helper.cpp Tutorial.cpp stb_image.cpp glad.c)
+
+# include glfw
+add_subdirectory(glfw)
+target_link_libraries(Tutorial glfw)
+
+set(VERTEX_SHADER_FILE "\"../shaders/vertex_shader.glsl\"")
+set(FRAGMENT_SHADER_FILE "\"../shaders/fragment_shader.glsl\"")
+
+# pass project version to the code
+target_include_directories(Tutorial PUBLIC
+                           "${PROJECT_BINARY_DIR}"
+                           "${PROJECT_SOURCE_DIR}"
+                           "${PROJECT_SOURCE_DIR}/glfw/include"
+                          )
+configure_file(cmake_variables.h.in cmake_variables.h)
