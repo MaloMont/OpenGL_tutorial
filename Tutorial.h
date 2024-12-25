@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/random.hpp>
 
 #include <iostream>
 #include <math.h>
@@ -14,6 +15,8 @@
 #include "Callbacks.h"
 #include "Cube.h"
 #include "Shader.h"
+#include "World.h"
+#include "Instance.h"
 
 #include "debug_helper.h"
 
@@ -36,8 +39,7 @@ private:
 
     Shader shader;
 
-    // delying initialization to after the libraries are initialized
-    Cube cube_template = Cube(true);
+    World world;
 };
 
 #endif

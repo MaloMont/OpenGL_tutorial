@@ -36,6 +36,14 @@ struct Shader
     void set_uniform(const char* uniform_name, int value) const;
     void set_uniform(const char* uniform_name, float value) const;
     void set_uniform(const char* uniform_name, glm::mat4 matrix) const;
+
+    const std::string MODEL = "model";
+    const std::string VIEW  = "view";
+    const std::string PROJECTION  = "projection";
+
+    void set_model(glm::mat4 model) const;
+    void set_view(glm::mat4 view) const;
+    void set_projection(glm::mat4 projection) const;
 };
 
 #endif

@@ -3,8 +3,9 @@
 /**
  * @brief Construct a new Cube object by initializing the VBO, the VAO and the EBO
  */
-Cube::Cube(bool delay_init /* = false */)
+Cube::Cube(bool && delay_init /* = false */)
 {
+    std::cout << "cube::cube" << std::endl;
     if(not delay_init)
         init();
 }
@@ -14,9 +15,15 @@ Cube::Cube(bool delay_init /* = false */)
  */
 void Cube::init()
 {
+    std::cout << "cube::init" << std::endl;
+
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);  
     buffer();
+
+    add_texture("../assets/textures/container.jpg", false);
+    add_texture("../assets/textures/awesomeface.png", true);
+
     loaded = true;
 }
 
@@ -84,33 +91,17 @@ void Cube::buffer()
     glBindVertexArray(0);
 }
 
-void Cube::draw(const Shader& shader)
+
+void Cube::draw(const Shader& shader, const Instance& to_draw)
 {
+    std::cout << "cube::draw" << std::endl;
+
     for(auto && text : textures)
         text.activate(shader);
 
     glBindVertexArray(VAO);
 
-    for(auto && instance : instances)
-        shader.set_uniform("model", instance.get_model_mat4());
-
-    glDrawArrays(GL_TRIANGLES, 0, NB_TO_DRAW);
-
-    glBindVertexArray(0);
-
-    for(auto && text : textures)
-        text.desactivate(shader);
-}
-
-
-void Cube::draw(const Shader& shader, unsigned int iInstance_to_draw)
-{
-    for(auto && text : textures)
-        text.activate(shader);
-
-    glBindVertexArray(VAO);
-
-    shader.set_uniform("model", instances[iInstance_to_draw].get_model_mat4());
+    shader.set_model(to_draw.get_model_mat4());
 
     glDrawArrays(GL_TRIANGLES, 0, NB_TO_DRAW);
 
@@ -161,72 +152,8 @@ void Cube::bind_texture(Texture _texture)
  * @brief creates a new texture specific to this object. When the object will be destroyed, the texture will also be destroyed.
  * @param _texture the texture object tobe added
  */
-void Cube::add_texture(const char* path, bool has_alpha_chanel)
+void Cube::add_texture(const char* path, bool && has_alpha_chanel)
 {
-    textures.push_back(Texture(GL_TEXTURE0 + textures.size(), path, has_alpha_chanel));
+    textures.push_back(Texture(GL_TEXTURE0 + textures.size(), path, std::forward<bool>(has_alpha_chanel)));
     texture_is_mine.push_back(true);
 }
-
-/**
- * @brief creates an instance of cube
- * @return unsigned int the index to access this instance
- */
-unsigned int Cube::create_instance(glm::vec3 _pos /* = glm::vec3(0.0f, 0.0f, 0.0f) */,
-                                   glm::vec3 _scaling /* glm::vec3(1.0f, 1.0f, 1.0f) */,
-                                   glm::vec3 _rotation_axis /* = glm::vec3(1.0f, 0.0f, 0.0f) */,
-                                   float _rotation_angle /* = 0.0f */)
-{
-    int index = instances.size();
-    instances.push_back(Instance(_pos, _scaling, _rotation_axis, _rotation_angle));
-    return index;
-}
-
-Cube::Instance Cube::get_instance(unsigned int iInstance)
-{
-    return instances[iInstance];
-}
-
-void Cube::set_instance_pos(unsigned int iInstance, glm::vec3 _pos)
-{
-    instances[iInstance].pos = _pos;
-}
-
-void Cube::set_instance_scaling(unsigned int iInstance, glm::vec3 _scaling)
-{
-    instances[iInstance].scaling = _scaling;
-}
-
-void Cube::set_instance_rotation_axis(unsigned int iInstance, glm::vec3 _rotation_axis)
-{
-    instances[iInstance].rotation_axis = _rotation_axis;
-}
-
-void Cube::set_instance_rotation_angle(unsigned int iInstance, float _rotation_angle)
-{
-    instances[iInstance].rotation_angle = _rotation_angle;
-}
-
-/**
- * @brief constructor for an instance of cube
- */
-Cube::Instance::Instance(glm::vec3 _pos /* = glm::vec3(0.0f, 0.0f, 0.0f) */,
-                         glm::vec3 _scaling /* glm::vec3(1.0f, 1.0f, 1.0f) */,
-                         glm::vec3 _rotation_axis /* = glm::vec3(1.0f, 0.0f, 0.0f) */,
-                         float _rotation_angle /* = 0.0f */)
-{
-    pos = _pos;
-    scaling = _scaling;
-    rotation_axis = _rotation_axis;
-    rotation_angle = _rotation_angle;
-}
-
-
-glm::mat4 Cube::Instance::get_model_mat4() const
-{
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, pos);
-    model = glm::scale(model, scaling);
-    model = glm::rotate(model, rotation_angle, rotation_axis); 
-    return model;
-}
-

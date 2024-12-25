@@ -240,3 +240,30 @@ void Shader::set_uniform(const char* uniform_name, glm::mat4 matrix) const
     turn_on();
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
 }
+
+/**
+ * @brief setter for the model matrix
+ * @param model the model matrix
+ */
+void Shader::set_model(glm::mat4 model) const
+{
+    set_uniform(MODEL.c_str(), model);
+}
+
+/**
+ * @brief setter for the view matrix
+ * @param model the view matrix
+ */
+void Shader::set_view(glm::mat4 view) const
+{
+    set_uniform(VIEW.c_str(), view);
+}
+
+/**
+ * @brief setter for the projection matrix
+ * @param model the projection matrix
+ */
+void Shader::set_projection(glm::mat4 projection) const
+{
+    set_uniform(PROJECTION.c_str(), projection);
+}

@@ -11,8 +11,8 @@ class Texture
 {
 public:
 
-    Texture(GLenum _unit, const char* path, bool has_alpha_canal);
-    void load(const char* path, bool has_alpha_canal);
+    Texture(GLenum _unit, const char* path, bool && has_alpha_canal);
+    void load(const char* path, bool && has_alpha_canal);
 
     void activate(const Shader& shader);
     void desactivate(const Shader& shader);

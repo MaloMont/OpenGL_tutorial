@@ -6,10 +6,10 @@
  * @param path the path of the texture image
  * @param has_alpha_canal whether the image has an alpha canal or not
  */
-Texture::Texture(GLenum _unit, const char* path, bool has_alpha_canal)
+Texture::Texture(GLenum _unit, const char* path, bool && has_alpha_canal)
 {
     unit = _unit;
-    load(path, has_alpha_canal);
+    load(path, std::forward<bool>(has_alpha_canal));
 }
 
 /**
@@ -17,7 +17,7 @@ Texture::Texture(GLenum _unit, const char* path, bool has_alpha_canal)
  * @param path the path to the image, from the executable
  * @param has_alpha_canal whether the image has an alpha canal or not
  */
-void Texture::load(const char* path, bool has_alpha_canal)
+void Texture::load(const char* path, bool && has_alpha_canal)
 {
     // OpenGL expects another kind of y axis
     stbi_set_flip_vertically_on_load(true);

@@ -5,16 +5,11 @@ Tutorial::Tutorial()
     init_libraries();
 
     shader.load(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
-
-    cube_template.init();
-
-    cube_template.add_texture("../assets/textures/container.jpg", false);
-    cube_template.add_texture("../assets/textures/awesomeface.png", true);
 }
 
 Tutorial::~Tutorial()
 {
-    cube_template.destroy();
+    world.destroy();
     glfwTerminate();
 }
 
@@ -82,7 +77,32 @@ void Tutorial::process_input()
  */
 void Tutorial::render_loop()
 {
-    auto my_cube = cube_template.create_instance();
+    glm::vec3 cubePositions[10] = {
+        glm::vec3( 0.0f,  0.0f,  0.0f), 
+        glm::vec3( 2.0f,  5.0f, -15.0f), 
+        glm::vec3(-1.5f, -2.2f, -2.5f),  
+        glm::vec3(-3.8f, -2.0f, -12.3f),  
+        glm::vec3( 2.4f, -0.4f, -3.5f),  
+        glm::vec3(-1.7f,  3.0f, -7.5f),  
+        glm::vec3( 1.3f, -2.0f, -2.5f),  
+        glm::vec3( 1.5f,  2.0f, -2.5f), 
+        glm::vec3( 1.5f,  0.2f, -1.5f), 
+        glm::vec3(-1.3f,  1.0f, -1.5f)  
+    };
+
+    std::vector<Instance> my_cubes;
+
+    for(auto && pos : cubePositions)
+    {
+        my_cubes.push_back(world.create(CUBE));
+        my_cubes.back().pos = pos;
+        my_cubes.back().rotation_axis = glm::vec3(glm::linearRand<float>(0.0f, 1.0f), glm::linearRand<float>(0.0f, 1.0f), glm::linearRand<float>(0.0f, 1.0f));
+        my_cubes.back().rotation_angle = glm::linearRand<float>(0, M_PI_2);
+    }
+
+    bool rotates[10];
+    for(int i = 0 ; i < 10 ; ++i)
+        rotates[i] = (i % 3 == 0);
 
     shader.turn_on();
 
@@ -107,14 +127,13 @@ void Tutorial::render_loop()
         projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
         shader.set_uniform("projection", projection);
 
-        cube_template.set_instance_rotation_angle(my_cube, glm::radians((float)value));
-        cube_template.set_instance_rotation_axis(my_cube,
-            glm::vec3(sin(glm::radians((float)value)) + 1.0f,
-                      sin(glm::radians((float)value)) + 1.0f,
-                      sin(glm::radians((float)value)) + 1.01f // to prevent [axis = (0, 0, 0)]
-                     ));
+        for(int i = 0 ; i < 10 ; ++i)
+        {
+            if(rotates[i])
+                my_cubes[i].rotation_angle = glm::radians((float)value);
 
-        cube_template.draw(shader, my_cube);
+            world.draw(shader, my_cubes[i]);
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();
