@@ -17,6 +17,7 @@
 #include "Shader.h"
 #include "World.h"
 #include "Instance.h"
+#include "Camera.h"
 
 #include "debug_helper.h"
 
@@ -32,14 +33,27 @@ public:
     void process_input();
     void render_loop();
 
+    void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
 private:
 
+    auto setup(); // TODO: remove
+
     GLFWwindow* window;
-    int WIN_WIDTH = 800, WIN_HEIGHT = 600;
+    const int WIN_WIDTH = 800;
+    const int WIN_HEIGHT = 600;
 
     Shader shader;
 
     World world;
+    Camera camera = Camera(WIN_WIDTH, WIN_HEIGHT);
+
+    float delta_time = 0.0f;	// Time between current frame and last frame
+
+    float last_mouse_x = WIN_WIDTH / 2.;
+    float last_mouse_y = WIN_HEIGHT / 2.;
+    bool first_mouse = true;
 };
+
 
 #endif

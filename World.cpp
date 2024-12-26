@@ -4,9 +4,7 @@ World::World()
 {  }
 
 World::~World()
-{
-    destroy();
-}
+{  }
 
 /**
  * @brief destroys the world :)

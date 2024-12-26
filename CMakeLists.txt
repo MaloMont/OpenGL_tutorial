@@ -10,6 +10,7 @@ target_sources(Tutorial PRIVATE
     main.cpp
     Tutorial.cpp
     Callbacks.cpp
+    Camera.cpp
     Shader.cpp
     Texture.cpp
     World.cpp

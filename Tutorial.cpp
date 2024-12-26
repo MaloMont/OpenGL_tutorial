@@ -3,7 +3,6 @@
 Tutorial::Tutorial()
 {
     init_libraries();
-
     shader.load(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 }
 
@@ -37,6 +36,8 @@ void Tutorial::init_glfw()
         exit(-1);
     }
     glfwMakeContextCurrent(window);
+
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
 /**
@@ -68,14 +69,36 @@ void Tutorial::init_libraries()
  */
 void Tutorial::process_input()
 {
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+    if(first_mouse)
+    {
+        last_mouse_x = xpos;
+        last_mouse_y = ypos;
+        first_mouse = false;
+    }
+    float delta_x = xpos - last_mouse_x;
+    float delta_y = last_mouse_y - ypos; // reversed since y-coordinates range from bottom to top
+    last_mouse_x = xpos;
+    last_mouse_y = ypos;
+    camera.inc_angles(delta_x, delta_y);
+
     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
+    if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        camera.go_straight(delta_time);
+    if(glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        camera.go_back(delta_time);
+    if(glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        camera.go_left(delta_time);
+    if(glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        camera.go_right(delta_time);
+    if(glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        camera.set_target(glm::vec3(0.0f, 0.0f, 0.0f));
 }
 
-/**
- * @brief app body : one loop corresponds to one app frame
- */
-void Tutorial::render_loop()
+
+auto Tutorial::setup()
 {
     glm::vec3 cubePositions[10] = {
         glm::vec3( 0.0f,  0.0f,  0.0f), 
@@ -100,6 +123,16 @@ void Tutorial::render_loop()
         my_cubes.back().rotation_angle = glm::linearRand<float>(0, M_PI_2);
     }
 
+    return my_cubes;
+}
+
+/**
+ * @brief app body : one loop corresponds to one app frame
+ */
+void Tutorial::render_loop()
+{
+    auto my_cubes = setup();
+
     bool rotates[10];
     for(int i = 0 ; i < 10 ; ++i)
         rotates[i] = (i % 3 == 0);
@@ -108,29 +141,27 @@ void Tutorial::render_loop()
 
     glEnable(GL_DEPTH_TEST);
 
-    int value = 0;
+    float last_frame = glfwGetTime(); // Time of last frame
+
     while(not glfwWindowShouldClose(window))
     {
-        value += 1;
+        float current_frame = glfwGetTime();
+        delta_time = current_frame - last_frame;
+        last_frame = current_frame;
+
         process_input();
 
         // rendering
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        glm::mat4 view = glm::mat4(1.0f);
-        // note that we're translating the scene in the reverse direction of where we want to move
-        view = glm::translate(view, glm::vec3(0.0f, 0.0f, -3.0f)); 
-        shader.set_uniform("view", view);
-
-        glm::mat4 projection;
-        projection = glm::perspective(glm::radians(45.0f), (float)WIN_WIDTH / (float)WIN_HEIGHT, 0.1f, 100.0f);
-        shader.set_uniform("projection", projection);
+        shader.set_view(camera.get_view());
+        shader.set_projection(camera.get_projection());
 
         for(int i = 0 ; i < 10 ; ++i)
         {
             if(rotates[i])
-                my_cubes[i].rotation_angle = glm::radians((float)value);
+                my_cubes[i].rotation_angle = glm::radians((float)glfwGetTime() * 10.0f);
 
             world.draw(shader, my_cubes[i]);
         }

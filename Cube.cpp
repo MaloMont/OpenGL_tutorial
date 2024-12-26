@@ -5,7 +5,6 @@
  */
 Cube::Cube(bool && delay_init /* = false */)
 {
-    std::cout << "cube::cube" << std::endl;
     if(not delay_init)
         init();
 }
@@ -15,8 +14,6 @@ Cube::Cube(bool && delay_init /* = false */)
  */
 void Cube::init()
 {
-    std::cout << "cube::init" << std::endl;
-
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);  
     buffer();
@@ -38,6 +35,9 @@ Cube::~Cube()
 
 void Cube::destroy()
 {
+    if(not loaded)
+        return;
+
     loaded = false;
     remove_all_texture();
     glDeleteVertexArrays(1, &VAO);
@@ -94,8 +94,6 @@ void Cube::buffer()
 
 void Cube::draw(const Shader& shader, const Instance& to_draw)
 {
-    std::cout << "cube::draw" << std::endl;
-
     for(auto && text : textures)
         text.activate(shader);
 
