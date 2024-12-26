@@ -25,7 +25,7 @@ void Cube::init()
 }
 
 /**
- * @brief Destroy the Cube object by freeing its VAO, its VBO and its EBO
+ * @brief Destroy the Cube object by freeing its VAO, its VBO and its EBO (only if the cube is loaded)
  */
 Cube::~Cube()
 {
@@ -33,6 +33,9 @@ Cube::~Cube()
         destroy();
 }
 
+/**
+ * @brief frees the allocated datas
+ */
 void Cube::destroy()
 {
     if(not loaded)
@@ -92,21 +95,26 @@ void Cube::buffer()
 }
 
 
-void Cube::draw(const Shader& shader, const Instance& to_draw)
+/**
+ * @brief draw cube vertex 
+ * 
+ * @param to_draw the parameters of the instance to draw (eg world position, shader, ...)
+ */
+void Cube::draw(const Instance& to_draw)
 {
     for(auto && text : textures)
-        text.activate(shader);
+        text.activate(to_draw.shader);
 
     glBindVertexArray(VAO);
 
-    shader.set_model(to_draw.get_model_mat4());
+    to_draw.shader.set_model(to_draw.get_model_mat4());
 
     glDrawArrays(GL_TRIANGLES, 0, NB_TO_DRAW);
 
     glBindVertexArray(0);
 
     for(auto && text : textures)
-        text.desactivate(shader);
+        text.desactivate(to_draw.shader);
 }
 
 /**

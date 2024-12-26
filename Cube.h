@@ -35,7 +35,7 @@ public:
     void set(float new_vertices[NB_VERTICES]);
     void buffer();
 
-    void draw(const Shader& shader, const Instance& to_draw);
+    void draw(const Instance& to_draw);
 
     void remove_all_texture();
     void set_textures(std::vector<Texture> _textures);

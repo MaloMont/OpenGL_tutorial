@@ -145,6 +145,17 @@ bool Shader::link_shaderProgram(unsigned int& vertexShader, unsigned int& fragme
     return true;
 }
 
+void Shader::destroy()
+{
+    loaded = false;
+    /* TODO */
+}
+
+bool Shader::is_loaded() const
+{
+    return loaded;
+}
+
 /**
  * @brief define this shader as the one in use
  */

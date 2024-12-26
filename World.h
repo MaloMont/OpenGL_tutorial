@@ -7,6 +7,7 @@
 
 #include "Object.h"
 #include "Cube.h"
+#include "Shader.h"
 #include "Instance.h"
 
 class World
@@ -16,8 +17,11 @@ public:
     World();
     ~World();
     void destroy();
-    Instance create(Obj_type type);
-    void draw(const Shader& shader, const Instance& obj);
+
+    Instance create(const Obj_type obj_type, const Shader_type shd_type);
+
+    void update_shaders(glm::mat4 view, glm::mat4 projection);
+    void draw(const Instance& obj);
 
 private:
 
@@ -39,6 +43,8 @@ private:
     Models models;
 
     std::vector<Instance> objects;
+
+    std::array<Shader, NB_SHADER_TYPE> shaders;
 };
 
 #endif

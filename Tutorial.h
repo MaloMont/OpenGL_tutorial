@@ -13,10 +13,8 @@
 
 #include "cmake_variables.h"
 #include "Callbacks.h"
-#include "Cube.h"
 #include "Shader.h"
 #include "World.h"
-#include "Instance.h"
 #include "Camera.h"
 
 #include "debug_helper.h"
@@ -42,8 +40,6 @@ private:
     GLFWwindow* window;
     const int WIN_WIDTH = 800;
     const int WIN_HEIGHT = 600;
-
-    Shader shader;
 
     World world;
     Camera camera = Camera(WIN_WIDTH, WIN_HEIGHT);

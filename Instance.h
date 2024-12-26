@@ -5,12 +5,14 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "Shader.h"
 #include "Obj_type.h"
 
-// specific to each cube
+// specific to each object
 struct Instance
 {
     Instance(Obj_type _type,
+             const Shader& shader,
              glm::vec3 _pos = glm::vec3(0.0f, 0.0f, 0.0f),
              glm::vec3 _scaling = glm::vec3(1.0f, 1.0f, 1.0f),
              glm::vec3 _rotation_axis = glm::vec3(1.0f, 0.0f, 0.0f),
@@ -24,6 +26,8 @@ struct Instance
     Obj_type type;
 
     glm::mat4 get_model_mat4() const;
+
+    const Shader& shader;
 };
 
 #endif

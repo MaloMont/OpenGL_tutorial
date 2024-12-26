@@ -111,7 +111,6 @@ glm::mat4 Camera::get_projection() const
  */
 void Camera::go_straight(const float delta_time)
 {
-    std::cout << "go on : " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;
     pos += speed * delta_time * direction;
     target = pos + direction;
     view = glm::lookAt(pos, target, y_axis);
@@ -123,7 +122,6 @@ void Camera::go_straight(const float delta_time)
  */
 void Camera::go_back(const float delta_time)
 {
-    std::cout << "go back : " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;
     pos -= speed * delta_time * direction;
     target = pos + direction;
     view = glm::lookAt(pos, target, y_axis);
@@ -135,7 +133,6 @@ void Camera::go_back(const float delta_time)
  */
 void Camera::go_left(const float delta_time)
 {
-    std::cout << "go left : " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;
     pos -= speed * delta_time * glm::normalize(glm::cross(direction, y_axis));
     target = pos + direction;
     view = glm::lookAt(pos, target, y_axis);
@@ -147,7 +144,6 @@ void Camera::go_left(const float delta_time)
  */
 void Camera::go_right(const float delta_time)
 {
-    std::cout << "go right : " << direction.x << ", " << direction.y << ", " << direction.z << std::endl;
     pos += speed * delta_time * glm::normalize(glm::cross(direction, y_axis));
     target = pos + direction;
     view = glm::lookAt(pos, target, y_axis);

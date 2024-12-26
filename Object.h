@@ -13,7 +13,7 @@ public:
     virtual void destroy()   { loaded = false; }
     virtual bool is_loaded() { return  loaded; }
 
-    virtual void draw(const Shader& shader, const Instance& obj)
+    virtual void draw(const Instance& obj)
     {  /* implemented in child class */  };
 
 protected: 

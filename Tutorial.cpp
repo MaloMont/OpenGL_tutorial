@@ -3,7 +3,6 @@
 Tutorial::Tutorial()
 {
     init_libraries();
-    shader.load(VERTEX_SHADER_FILE, FRAGMENT_SHADER_FILE);
 }
 
 Tutorial::~Tutorial()
@@ -117,7 +116,7 @@ auto Tutorial::setup()
 
     for(auto && pos : cubePositions)
     {
-        my_cubes.push_back(world.create(CUBE));
+        my_cubes.push_back(world.create(CUBE, OBJ_SHADER));
         my_cubes.back().pos = pos;
         my_cubes.back().rotation_axis = glm::vec3(glm::linearRand<float>(0.0f, 1.0f), glm::linearRand<float>(0.0f, 1.0f), glm::linearRand<float>(0.0f, 1.0f));
         my_cubes.back().rotation_angle = glm::linearRand<float>(0, M_PI_2);
@@ -137,8 +136,6 @@ void Tutorial::render_loop()
     for(int i = 0 ; i < 10 ; ++i)
         rotates[i] = (i % 3 == 0);
 
-    shader.turn_on();
-
     glEnable(GL_DEPTH_TEST);
 
     float last_frame = glfwGetTime(); // Time of last frame
@@ -155,15 +152,14 @@ void Tutorial::render_loop()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        shader.set_view(camera.get_view());
-        shader.set_projection(camera.get_projection());
+        world.update_shaders(camera.get_view(), camera.get_projection());
 
         for(int i = 0 ; i < 10 ; ++i)
         {
             if(rotates[i])
                 my_cubes[i].rotation_angle = glm::radians((float)glfwGetTime() * 10.0f);
 
-            world.draw(shader, my_cubes[i]);
+            world.draw(my_cubes[i]);
         }
 
         glfwSwapBuffers(window);
