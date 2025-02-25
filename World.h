@@ -7,6 +7,7 @@
 
 #include "Object.h"
 #include "Cube.h"
+#include "Light.h"
 #include "Shader.h"
 #include "Instance.h"
 
@@ -28,11 +29,13 @@ private:
     class Models
     {
     private:
+
         const static int NB_OBJ_TYPES = 1;
         constexpr static int UNINITIALIZED = -1;
 
-        Cube cube = Cube(true);
-        Object object;
+        Cube cube     = Cube(true);
+        Object object = Object(true);
+        Light light   = Light(true);
 
     public:
 

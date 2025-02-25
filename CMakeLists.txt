@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 
 project(Tutorial VERSION 1.0)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(Tutorial)
@@ -15,7 +15,9 @@ target_sources(Tutorial PRIVATE
     Texture.cpp
     World.cpp
     Instance.cpp
+    Object.cpp
     Cube.cpp
+    Light.cpp
     debug_helper.cpp
     stb_image.cpp glad.c
 )
@@ -34,3 +36,5 @@ target_include_directories(Tutorial PUBLIC
                            "${PROJECT_SOURCE_DIR}/glfw/include"
                           )
 configure_file(cmake_variables.h.in cmake_variables.h)
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -pg -fsanitize=address")

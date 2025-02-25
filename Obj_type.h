@@ -5,5 +5,6 @@ using Obj_type = int;
 
 // TODO: changer en enum
 constexpr int CUBE = 0;
+constexpr int LIGHT = 1;
 
 #endif

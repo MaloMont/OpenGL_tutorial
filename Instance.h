@@ -12,7 +12,7 @@
 struct Instance
 {
     Instance(Obj_type _type,
-             const Shader& shader,
+             const Shader& _shader,
              glm::vec3 _pos = glm::vec3(0.0f, 0.0f, 0.0f),
              glm::vec3 _scaling = glm::vec3(1.0f, 1.0f, 1.0f),
              glm::vec3 _rotation_axis = glm::vec3(1.0f, 0.0f, 0.0f),

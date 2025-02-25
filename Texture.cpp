@@ -88,7 +88,7 @@ void Texture::activate(const Shader& shader)
 /**
  * @brief activates the texture
  */
-void Texture::desactivate(const Shader& shader)
+void Texture::desactivate()
 {
     glActiveTexture(unit);
     glBindTexture(GL_TEXTURE_2D, 0);

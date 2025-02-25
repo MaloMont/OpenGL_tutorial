@@ -63,13 +63,15 @@ void World::draw(const Instance& obj)
     models[obj.type].draw(obj);
 }
 
+
 /**
  * @brief destroys every model
  */
 void World::Models::destroy()
 {
-    cube.destroy();
     object.destroy();
+    cube.destroy();
+    light.destroy();
 }
 
 /**
@@ -83,6 +85,9 @@ Object& World::Models::operator[](Obj_type type)
     {
         case CUBE:
             return cube;
+        break;
+        case LIGHT:
+            return light;
         break;
         default:
             return object;

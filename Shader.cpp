@@ -59,7 +59,7 @@ std::string get_file_content(std::string path)
 
         file.close();
     }
-    catch(std::ifstream::failure e)
+    catch(std::ifstream::failure & e)
     {
         std::cerr << "[ERROR]: Shader::get_file_content => FILE_NOT_SUCCESFULLY_READ => path: " << path << std::endl;
     }
@@ -177,7 +177,7 @@ void Shader::turn_on() const
  */
 unsigned int Shader::get_location(const char* uniform_name) const
 {
-    unsigned int location = glGetUniformLocation(shaderProgram, uniform_name);
+    int location = glGetUniformLocation(shaderProgram, uniform_name);
     if(location < 0)
         std::cerr << "[WARNING]: couldn't find uniform location for " << uniform_name << std::endl;
 

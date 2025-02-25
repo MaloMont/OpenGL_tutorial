@@ -132,6 +132,10 @@ void Tutorial::render_loop()
 {
     auto my_cubes = setup();
 
+    auto my_light = world.create(LIGHT, LIGHT_SHADER);
+    my_light.pos = glm::vec3(1.0f,  0.0f,  0.0f);
+    my_light.scaling = glm::vec3(0.2f, 0.2f, 0.2f);
+
     bool rotates[10];
     for(int i = 0 ; i < 10 ; ++i)
         rotates[i] = (i % 3 == 0);
@@ -161,6 +165,8 @@ void Tutorial::render_loop()
 
             world.draw(my_cubes[i]);
         }
+
+        world.draw(my_light);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

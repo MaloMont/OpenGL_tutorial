@@ -1,13 +1,6 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef CUBE_H
+#define CUBE_H
 
-#include <glad/glad.h>
-
-#include <iostream>
-#include <vector>
-
-#include "Texture.h"
-#include "Instance.h"
 #include "Object.h"
 
 
@@ -24,37 +17,16 @@ private:
     const static int NB_DATA_PER_VERTICE = 5;
     const static int NB_TO_DRAW = NB_VERTICES * NB_DATA_PER_VERTICE;
 
+    const char* DEFAULT_TEXTURE1 = "../assets/textures/container.jpg";
+    const char* DEFAULT_TEXTURE2 = "../assets/textures/awesomeface.png";
+
 public:
 
-    Cube(bool && delay_init = false);
+    Cube(bool delay_init = false);
     ~Cube();
-
     void init();
-    void destroy();
-
-    void set(float new_vertices[NB_VERTICES]);
-    void buffer();
-
-    void draw(const Instance& to_draw);
-
-    void remove_all_texture();
-    void set_textures(std::vector<Texture> _textures);
-    void bind_texture(Texture _texture);
-    void add_texture(const char* path, bool && has_alpha_chanel);
 
 private:
-
-    // space on the GPU where vertices are stored, so that they can be efficiently passed to the shader
-    unsigned int VBO;
-
-    // remembers how a VBO is configured,
-    // so that every changes we made to the VBO is restored by binding the VAO.
-    // Therefore, we can use multiple VAO and switch between them to have multiple kind of display
-    unsigned int VAO;
-
-    // texture of the object
-    std::vector<Texture> textures;
-    std::vector<bool> texture_is_mine;
 
     float vertices[NB_VERTICES * NB_DATA_PER_VERTICE] = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
