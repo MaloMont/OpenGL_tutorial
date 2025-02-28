@@ -10,17 +10,23 @@ Shader::Shader()
  * @return true if successful
  * @return false if not
  */
-bool Shader::load(std::string vertex_path, std::string fragment_path)
+bool Shader::load(std::string vertex_path, std::string fragment_path, std::string _name)
 {
     unsigned int vertexShader;
     unsigned int fragmentShader;
 
+// TODO: remove exits
+
     if(not compile_vertexShader(vertexShader, vertex_path))
+    {
+        exit(EXIT_FAILURE);
         return false;
+    }
 
     if(not compile_fragmentShader(fragmentShader, fragment_path))
     {
         glDeleteShader(vertexShader);
+        exit(EXIT_FAILURE);
         return false;
     }
 
@@ -28,11 +34,14 @@ bool Shader::load(std::string vertex_path, std::string fragment_path)
     {
         glDeleteShader(vertexShader);
         glDeleteShader(fragmentShader);
+        exit(EXIT_FAILURE);
         return false;
     }
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
+
+    name = _name;
 
     loaded = true;
 
@@ -88,7 +97,9 @@ bool Shader::compile_vertexShader(unsigned int& vertexShader, std::string vertex
     {
         char infoLog[1024];
         glGetShaderInfoLog(vertexShader, 1024, NULL, infoLog);
-        std::cerr << "[ERROR]: Shader::compile_vertexShader => COMPILATION_FAILED.\n" << infoLog << std::endl;
+        std::cerr << "[ERROR]: Shader::compile_vertexShader => COMPILATION_FAILED.\n"
+                  << "shader file : " << vertex_path << "\n"
+                  << infoLog << std::endl;
         return false;
     }
     return true;
@@ -115,7 +126,9 @@ bool Shader::compile_fragmentShader(unsigned int& fragmentShader, std::string fr
     {
         char infoLog[1024];
         glGetShaderInfoLog(fragmentShader, 1024, NULL, infoLog);
-        std::cerr << "[ERROR]: Shader::compile_fragmentShader => COMPILATION FAILED.\n" << infoLog << std::endl;
+        std::cerr << "[ERROR]: Shader::compile_fragmentShader => COMPILATION FAILED.\n"
+                  << "shader file : " << fragment_path << "\n"
+                  << infoLog << std::endl;
         return false;
     }
     return true;
@@ -179,7 +192,7 @@ unsigned int Shader::get_location(const char* uniform_name) const
 {
     int location = glGetUniformLocation(shaderProgram, uniform_name);
     if(location < 0)
-        std::cerr << "[WARNING]: couldn't find uniform location for " << uniform_name << std::endl;
+        std::cerr << "[WARNING]: (in shader " << name << ") : couldn't find uniform location for " << uniform_name << std::endl;
 
     return location;
 }
@@ -211,7 +224,6 @@ void Shader::set_uniform(const char* uniform_name, bool value) const
     unsigned int location = get_location(uniform_name);
     turn_on();
     glUniform1i(location, (int)value);
-
 }
 
 /**
@@ -250,6 +262,18 @@ void Shader::set_uniform(const char* uniform_name, glm::mat4 matrix) const
     unsigned int location = get_location(uniform_name);
     turn_on();
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+/**
+ * @brief sets a vec3 uniform in a shader program to the given `vec`
+ * @param uniform_name name of the uniform in the shader program
+ * @param vec the vec3
+ */
+void Shader::set_uniform(const char* uniform_name, glm::vec3 vec) const
+{
+    unsigned int location = get_location(uniform_name);
+    turn_on();
+    glUniform3fv(location, 1, glm::value_ptr(vec));
 }
 
 /**

@@ -1,8 +1,10 @@
 #ifndef CUBE_H
 #define CUBE_H
 
-#include "Object.h"
+#include <vector>
 
+#include "Object.h"
+#include "Instance.h"
 
 /**
  * @brief Cube template. 
@@ -26,9 +28,19 @@ public:
     ~Cube();
     void init();
 
+    using Instance = _Instance;
+
 private:
 
-    float vertices[NB_VERTICES * NB_DATA_PER_VERTICE] = {
+    std::vector<Instance> instances;
+
+public:
+
+    Instance& create(const Shader& shd);
+
+protected:
+
+    std::array<float, NB_VERTICES * NB_DATA_PER_VERTICE> vertices = {
         -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
          0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
          0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
@@ -50,27 +62,31 @@ private:
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
 
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
 
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,   0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,   0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,   0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
+         0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
         -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
         -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
     };
+
+    virtual std::array<float, NB_VERTICES * NB_DATA_PER_VERTICE>&
+     get_vertices()
+     { return vertices; }
 };
 
 #endif

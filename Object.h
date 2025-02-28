@@ -6,16 +6,11 @@
 #include <iostream>
 #include <vector>
 
-#include <stacktrace>
-
 #include "Texture.h"
 #include "Instance.h"
-#include "Object.h"
-
 
 /**
- * @brief Simple object template (mother class)
- * default to some cube with no texture
+ * @brief Simple object template (abstract mother class)
  */
 class Object
 {
@@ -31,13 +26,11 @@ public:
     virtual ~Object();
 
     virtual void init();
+    virtual void buffer();
     virtual void destroy();
     virtual bool is_loaded() const;
 
-    virtual void set(float new_vertices[NB_VERTICES]);
-    virtual void buffer();
-
-    virtual void draw(const Instance& to_draw);
+    virtual void draw(const _Instance& to_draw);
 
     virtual void remove_all_texture();
     virtual void set_textures(std::vector<Texture> _textures);
@@ -60,49 +53,20 @@ protected:
     std::vector<Texture> textures;
     std::vector<bool> texture_is_mine;
 
-    float vertices[NB_VERTICES * NB_DATA_PER_VERTICE] = {
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f, -0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 0.0f,
-
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-         0.5f, -0.5f,  0.5f,  1.0f, 0.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-         0.5f,  0.5f,  0.5f,  1.0f, 1.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        0.5f,  0.5f,  0.5f,  1.0f, 0.0f,
-
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,  -0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,  -0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,  -0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f, -0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f, -0.5f, -0.5f,  0.0f, 1.0f,
-
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f,
-        0.5f,   0.5f, -0.5f,  1.0f, 1.0f,
-        0.5f,   0.5f,  0.5f,  1.0f, 0.0f,
-        0.5f,   0.5f,  0.5f,  1.0f, 0.0f,
-        -0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
-        -0.5f,  0.5f, -0.5f,  0.0f, 1.0f
-    };
+    virtual std::array<float, NB_VERTICES * NB_DATA_PER_VERTICE>&
+     get_vertices()
+     = 0;
 };
+
+
+/**
+ * @brief structure générique permettant d'accéder au type Instance d'un Objet donné en template
+ * @tparam Obj the object whose type we want
+ */
+template <typename Obj>
+struct ObjectSpec {
+    using InstanceType = typename Obj::Instance;
+};
+
 
 #endif

@@ -20,14 +20,29 @@ Cube::~Cube()
     loaded = false;
 }
 
+/**
+ * @brief initializes the cube template
+ */
 void Cube::init()
 {
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);  
+
     buffer();
 
     add_texture(DEFAULT_TEXTURE1, false);
     add_texture(DEFAULT_TEXTURE2, true);
 
     loaded = true;
+}
+
+/**
+ * @brief creates a new Cube instance
+ * @param shd the linked shader
+ * @return Cube::CubeInstance& a reference to the new instance
+ */
+Cube::Instance& Cube::create(const Shader& shd)
+{
+    instances.push_back({CUBE, shd});
+    return instances.back();
 }

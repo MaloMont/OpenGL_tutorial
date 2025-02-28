@@ -24,13 +24,15 @@ private:
 
     unsigned int shaderProgram;
 
+    std::string name;
+
     bool loaded = false;
 
 public:
 
     Shader();
 
-    bool load(std::string vertex_path, std::string fragment_path);
+    bool load(std::string vertex_path, std::string fragment_path, std::string _name);
     bool compile_vertexShader(unsigned int& vertexShader, std::string vertex_path);
     bool compile_fragmentShader(unsigned int& fragmentShader, std::string fragment_path);
     bool link_shaderProgram(unsigned int& vertexShader, unsigned int& fragmentShader);
@@ -43,6 +45,7 @@ public:
     void set_uniform(const char* uniform_name, bool value) const;
     void set_uniform(const char* uniform_name, int value) const;
     void set_uniform(const char* uniform_name, float value) const;
+    void set_uniform(const char* uniform_name, glm::vec3 vec) const;
     void set_uniform(const char* uniform_name, glm::mat4 matrix) const;
 
 private:
@@ -72,6 +75,10 @@ VERTEX_PATH {
 FRAGMENT_PATH {
     "../shaders/object.fshd",
     "../shaders/light_source.fshd"
+},
+SHADER_NAME {
+    "Simple Object shader",
+    "Light shader"
 };
 
 #endif

@@ -112,11 +112,11 @@ auto Tutorial::setup()
         glm::vec3(-1.3f,  1.0f, -1.5f)  
     };
 
-    std::vector<Instance> my_cubes;
+    std::vector<Cube::Instance> my_cubes;
 
     for(auto && pos : cubePositions)
     {
-        my_cubes.push_back(world.create(CUBE, OBJ_SHADER));
+        my_cubes.push_back(world.create<Cube>(CUBE, OBJ_SHADER));
         my_cubes.back().pos = pos;
         my_cubes.back().rotation_axis = glm::vec3(glm::linearRand<float>(0.0f, 1.0f), glm::linearRand<float>(0.0f, 1.0f), glm::linearRand<float>(0.0f, 1.0f));
         my_cubes.back().rotation_angle = glm::linearRand<float>(0, M_PI_2);
@@ -132,7 +132,7 @@ void Tutorial::render_loop()
 {
     auto my_cubes = setup();
 
-    auto my_light = world.create(LIGHT, LIGHT_SHADER);
+    auto my_light = world.create<Light>(LIGHT, LIGHT_SHADER);
     my_light.pos = glm::vec3(1.0f,  0.0f,  0.0f);
     my_light.scaling = glm::vec3(0.2f, 0.2f, 0.2f);
 
@@ -156,6 +156,9 @@ void Tutorial::render_loop()
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        world.draw(my_light);
+        // world.update_light_color(my_light.color);
+
         world.update_shaders(camera.get_view(), camera.get_projection());
 
         for(int i = 0 ; i < 10 ; ++i)
@@ -165,8 +168,6 @@ void Tutorial::render_loop()
 
             world.draw(my_cubes[i]);
         }
-
-        world.draw(my_light);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

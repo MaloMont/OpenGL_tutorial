@@ -1,4 +1,5 @@
 #include "Object.h"
+#include <span> // Object::buffer
 
 /**
  * @brief Construct a new object by initializing the VBO, the VAO and the EBO
@@ -27,6 +28,9 @@ void Object::init()
 {
     glGenBuffers(1, &VBO);
     glGenVertexArrays(1, &VAO);  
+
+    std::cout << "from Object\n";
+
     buffer();
 
     loaded = true;
@@ -57,33 +61,20 @@ bool Object::is_loaded() const
 }
 
 /**
- * @brief changes the vertices of the triangle.
- * @param new_vertices the 4 new vertices. Has to be of format
- * posX, posY, posZ, colorR, colorG, colorB, textS, testT
- * for each of the 4 vertices
- */
-void Object::set(float new_vertices[NB_VERTICES])
-{
-    if(new_vertices != NULL)
-        for(int i = 0 ; i < NB_VERTICES ; ++i)
-            vertices[i] = new_vertices[i];
-
-    buffer();
-}
-
-/**
  * @brief buffers the vertices into the curently bound VBO in static mod
  */
 void Object::buffer()
 {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    
+        std::span<float, NB_TO_DRAW> raw_vertices { get_vertices().data(), get_vertices().size() };
 
         // vertices --> VBO ; remembered by the VAO
         // GL_STREAM_DRAW: the data is set only once and used by the GPU at most a few times.
         // GL_STATIC_DRAW: the data is set only once and used many times.
         // GL_DYNAMIC_DRAW: the data is changed a lot and used many times.
-        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, raw_vertices.size_bytes(), raw_vertices.data(), GL_STATIC_DRAW);
 
         // how datas are organised
         // first argument is cuz : layout (position = 0)
@@ -109,7 +100,7 @@ void Object::buffer()
  * 
  * @param to_draw the parameters of the instance to draw (eg world position, shader, ...)
  */
-void Object::draw(const Instance& to_draw)
+void Object::draw(const _Instance& to_draw)
 {
     for(auto && text : textures)
         text.activate(to_draw.shader);

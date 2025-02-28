@@ -9,9 +9,9 @@
 #include "Obj_type.h"
 
 // specific to each object
-struct Instance
+struct _Instance
 {
-    Instance(Obj_type _type,
+    _Instance(const Obj_type _type,
              const Shader& _shader,
              glm::vec3 _pos = glm::vec3(0.0f, 0.0f, 0.0f),
              glm::vec3 _scaling = glm::vec3(1.0f, 1.0f, 1.0f),
@@ -23,11 +23,11 @@ struct Instance
     glm::vec3 rotation_axis;
     float rotation_angle;
 
-    Obj_type type;
-
     glm::mat4 get_model_mat4() const;
 
     const Shader& shader;
+
+    Obj_type type;
 };
 
 #endif
