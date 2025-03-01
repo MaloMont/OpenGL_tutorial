@@ -31,7 +31,7 @@ void Cube::init()
     buffer();
 
     add_texture(DEFAULT_TEXTURE1, false);
-    add_texture(DEFAULT_TEXTURE2, true);
+//    add_texture(DEFAULT_TEXTURE2, true);
 
     loaded = true;
 }

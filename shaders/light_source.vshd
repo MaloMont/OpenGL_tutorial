@@ -1,7 +1,10 @@
+/* not used
 #version 330 core
 layout (location = 0) in vec3 aPos; // the position variable has attribute position 0
-layout (location = 1) in vec2 aTexCoord; // the color variable has attribute position 1
+layout (location = 1) in vec3 aNormal; // the color variable has attribute position 1
+layout (location = 2) in vec2 aTexCoord; // the color variable has attribute position 1
 
+out vec3 normal;
 out vec2 texCoord;
 
 uniform mat4 model;
@@ -15,5 +18,7 @@ void main()
     // note that we read the multiplication from right to left
     gl_Position = projection * view * model * pos;
 
+    normal = aNormal;
     texCoord = aTexCoord;
 }
+*/

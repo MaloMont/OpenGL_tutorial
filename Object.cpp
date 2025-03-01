@@ -87,8 +87,12 @@ void Object::buffer()
         glEnableVertexAttribArray(0);
 
         // same for texture coordinates
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, NB_DATA_PER_VERTICE * sizeof(float), (void*)(3 * sizeof(float)));
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, NB_DATA_PER_VERTICE * sizeof(float), (void*)(3 * sizeof(float)));
         glEnableVertexAttribArray(1);
+
+        // same for texture coordinates
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, NB_DATA_PER_VERTICE * sizeof(float), (void*)(6 * sizeof(float)));
+        glEnableVertexAttribArray(2);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -108,6 +112,10 @@ void Object::draw(const _Instance& to_draw)
     glBindVertexArray(VAO);
 
     to_draw.shader.set_model(to_draw.get_model_mat4());
+    if(to_draw.type != LIGHT)
+        to_draw.shader.set_model_normals(
+            glm::mat3(glm::transpose(glm::inverse(to_draw.get_model_mat4())))
+        );
 
     glDrawArrays(GL_TRIANGLES, 0, NB_TO_DRAW);
 

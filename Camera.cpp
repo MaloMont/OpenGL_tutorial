@@ -106,6 +106,15 @@ glm::mat4 Camera::get_projection() const
 }
 
 /**
+ * @brief get the world position of the camera
+ * @return glm::vec3 
+ */
+glm::vec3 Camera::get_pos() const
+{
+    return pos;
+}
+
+/**
  * @brief go straight on
  * @param delta_time the time of the last frame, to accord the deplacment amount accordingly
  */

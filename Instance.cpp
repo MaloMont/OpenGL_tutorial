@@ -26,6 +26,6 @@ glm::mat4 _Instance::get_model_mat4() const
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, pos);
     model = glm::scale(model, scaling);
-    model = glm::rotate(model, rotation_angle, rotation_axis); 
+    model = glm::rotate(model, rotation_angle, rotation_axis);
     return model;
 }

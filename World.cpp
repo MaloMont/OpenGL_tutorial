@@ -46,13 +46,18 @@ void World::update_shaders(glm::mat4 view, glm::mat4 projection)
  * @brief update the light color
  * @param color the new color
  */
-void World::update_light_color(glm::vec3 color)
+void World::update_light_conf(glm::vec3 light_pos, glm::vec3 color, glm::vec3 view_pos)
 {
     for(auto && itShader : shaders)
     {
         if(itShader.is_loaded())
         {
-            itShader.set_uniform("light_color", color);
+            if(itShader.get_name() != "Light shader")
+            {
+                itShader.set_uniform("Light_pos", light_pos);
+                itShader.set_uniform("View_pos", view_pos);
+            }
+            itShader.set_uniform("Light_color", color);
         }
     }
 }

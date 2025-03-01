@@ -1,14 +1,43 @@
 #version 330 core
 out vec4 FragColor;
-  
-in vec2 texCoord;
 
-uniform sampler2D texture0;
-uniform sampler2D texture1;
+in vec3 Normal;
+in vec2 TexCoord;
+in vec3 Frag_pos;
+
+uniform mat3 model_normals; // model matrix for the normal vercors
+uniform sampler2D Texture0;
+uniform sampler2D Texture1;
+uniform vec3 Light_color;
+uniform vec3 Light_pos;
+uniform vec3 View_pos;
 
 void main()
 {
-    FragColor = mix(texture(texture0, texCoord),
-                    texture(texture1, texCoord),
-                    0.25);
+    vec3 objColor = mix(texture(Texture0, TexCoord),
+                        texture(Texture1, TexCoord),
+                        0.25)
+                    .rgb;
+
+//    vec3 objColor = vec3(1.0, 0.5, 0.31);
+    vec3 normal = normalize(model_normals *  Normal);
+
+    // ambient
+    float ambientStrenght = 0.3;
+    vec3 ambient = ambientStrenght * Light_color;
+
+    // diffuse
+    vec3 light_ray = normalize(Light_pos - Frag_pos);
+    float diffuseStrenght = max(0.0, dot(normal, light_ray));
+    vec3 diffuse = diffuseStrenght * Light_color;
+
+    // specular
+    vec3 view_dir = normalize(View_pos - Frag_pos);
+    vec3 reflected_ray = reflect(-light_ray, normal);
+    float specularStrenght = 0.5 * pow(max(dot(view_dir, reflected_ray), 0.0), 32);
+    vec3 specular = specularStrenght * Light_color;
+
+    vec3 result = (ambient + diffuse + specular) * objColor;
+
+    FragColor = vec4(result, 1.0);
 }

@@ -47,18 +47,23 @@ public:
     void set_uniform(const char* uniform_name, float value) const;
     void set_uniform(const char* uniform_name, glm::vec3 vec) const;
     void set_uniform(const char* uniform_name, glm::mat4 matrix) const;
+    void set_uniform(const char* uniform_name, glm::mat3 matrix) const;
+
+    std::string get_name() const { return name; }
 
 private:
 
     const std::string MODEL = "model";
     const std::string VIEW  = "view";
     const std::string PROJECTION  = "projection";
+    const std::string MODEL_NORMALS  = "model_normals";
 
 public:
 
     void set_model(glm::mat4 model) const;
     void set_view(glm::mat4 view) const;
     void set_projection(glm::mat4 projection) const;
+    void set_model_normals(glm::mat3 model_normals) const;
 };
 
 // TODO: as real enum
@@ -70,7 +75,7 @@ using Shader_type = int;
 const std::array<std::string, NB_SHADER_TYPE>
 VERTEX_PATH {
     "../shaders/object.vshd",
-    "../shaders/light_source.vshd"
+    "../shaders/object.vshd"
 },
 FRAGMENT_PATH {
     "../shaders/object.fshd",

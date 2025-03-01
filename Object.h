@@ -17,7 +17,7 @@ class Object
 protected:
 
     const static int NB_VERTICES = 36;
-    const static int NB_DATA_PER_VERTICE = 5;
+    const static int NB_DATA_PER_VERTICE = 8;
     const static int NB_TO_DRAW = NB_VERTICES * NB_DATA_PER_VERTICE;
 
 public:

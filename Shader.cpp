@@ -192,7 +192,7 @@ unsigned int Shader::get_location(const char* uniform_name) const
 {
     int location = glGetUniformLocation(shaderProgram, uniform_name);
     if(location < 0)
-        std::cerr << "[WARNING]: (in shader " << name << ") : couldn't find uniform location for " << uniform_name << std::endl;
+        std::cerr << "[WARNING]: (in shader " << name << ") : couldn't find uniform location for \'" << uniform_name << "\'" << std::endl;
 
     return location;
 }
@@ -265,6 +265,18 @@ void Shader::set_uniform(const char* uniform_name, glm::mat4 matrix) const
 }
 
 /**
+ * @brief sets a mat4 uniform in a shader program to the given `matrix`
+ * @param uniform_name name of the uniform in the shader program
+ * @param matrix the matrix
+ */
+void Shader::set_uniform(const char* uniform_name, glm::mat3 matrix) const
+{
+    unsigned int location = get_location(uniform_name);
+    turn_on();
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+}
+
+/**
  * @brief sets a vec3 uniform in a shader program to the given `vec`
  * @param uniform_name name of the uniform in the shader program
  * @param vec the vec3
@@ -301,4 +313,13 @@ void Shader::set_view(glm::mat4 view) const
 void Shader::set_projection(glm::mat4 projection) const
 {
     set_uniform(PROJECTION.c_str(), projection);
+}
+
+/**
+ * @brief setter for the model_normals matrix
+ * @param model the model_normals matrix
+ */
+void Shader::set_model_normals(glm::mat3 model_normals) const
+{
+    set_uniform(MODEL_NORMALS.c_str(), model_normals);
 }
