@@ -106,6 +106,8 @@ void Object::buffer()
  */
 void Object::draw(const _Instance& to_draw)
 {
+    to_draw.shader.set_material(to_draw.material);
+
     for(auto && text : textures)
         text.activate(to_draw.shader);
 

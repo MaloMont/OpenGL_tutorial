@@ -28,10 +28,11 @@ public:
     {
         using _Instance::_Instance;
 
-        glm::vec3 color = {1.0f, 1.0f, 1.0f};
+        Material spec = DEFAULT_LIGHT;
 
-        void setColor(glm::vec3 new_color)
-        { color = new_color; }
+        const Material get_spec() const { return spec; }
+        void set_spec(Material _spec);
+        void set_spec(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
     };
 
 private:

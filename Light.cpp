@@ -43,3 +43,14 @@ Light::Instance& Light::create(const Shader& shd)
     instances.push_back({LIGHT, shd});
     return instances.back();
 }
+
+void Light::Instance::set_spec(Material _spec)
+{
+    spec = _spec;
+}
+
+void Light::Instance::set_spec(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
+{
+    Material spec { ambient, diffuse, specular };
+    set_spec(spec);
+}

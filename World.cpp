@@ -43,23 +43,26 @@ void World::update_shaders(glm::mat4 view, glm::mat4 projection)
 }
 
 /**
- * @brief update the light color
- * @param color the new color
+ * @brief update the light parameters
+ * @param pos the new light position
+ * @param color the new light color
  */
-void World::update_light_conf(glm::vec3 light_pos, glm::vec3 color, glm::vec3 view_pos)
+void World::update_light_conf(glm::vec3 pos, Material spec)
 {
     for(auto && itShader : shaders)
-    {
         if(itShader.is_loaded())
-        {
-            if(itShader.get_name() != "Light shader")
-            {
-                itShader.set_uniform("Light_pos", light_pos);
-                itShader.set_uniform("View_pos", view_pos);
-            }
-            itShader.set_uniform("Light_color", color);
-        }
-    }
+            itShader.set_light(pos, spec);
+}
+
+/**
+ * @brief update the position of the viewer
+ * @param view_pos the new position of the camera
+ */
+void World::update_view_pos(glm::vec3 view_pos)
+{
+    for(auto && itShader : shaders)
+        if(itShader.is_loaded() and itShader.get_name() != "Light shader")
+            itShader.set_view_pos(view_pos);
 }
 
 /**

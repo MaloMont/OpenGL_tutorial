@@ -76,10 +76,7 @@ unsigned int Texture::get_id() const
  */
 void Texture::activate(const Shader& shader)
 {
-    shader.set_uniform(
-        std::string("Texture" + std::to_string((int)(unit - GL_TEXTURE0))).c_str(),
-        (int)(unit - GL_TEXTURE0)
-    );
+    shader.bind_texture_unit(unit);
 
     glActiveTexture(unit);
     glBindTexture(GL_TEXTURE_2D, texture);

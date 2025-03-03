@@ -41,7 +41,8 @@ public:
     }
 
     void update_shaders(glm::mat4 view, glm::mat4 projection);
-    void update_light_conf(glm::vec3 pos, glm::vec3 color, glm::vec3 view_pos);
+    void update_light_conf(glm::vec3 pos, Material spec);
+    void update_view_pos(glm::vec3 view_pos);
 
     void draw(const _Instance& obj);
 

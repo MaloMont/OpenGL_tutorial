@@ -135,7 +135,8 @@ void Tutorial::render_loop()
     auto my_light = world.create<Light>(LIGHT, LIGHT_SHADER);
     my_light.pos = glm::vec3(1.0f,  0.0f,  0.0f);
     my_light.scaling = glm::vec3(0.2f, 0.2f, 0.2f);
-    my_light.color = glm::vec3(1.0f, 1.0f, 0.5f);
+    my_light.set_spec(DEFAULT_LIGHT);
+    my_light.material = LAMP;
 
     bool rotates[10];
     for(int i = 0 ; i < 10 ; ++i)
@@ -157,10 +158,11 @@ void Tutorial::render_loop()
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        my_light.pos = glm::vec3(10.0f * sin(glm::radians((float)glfwGetTime() * 10.0f)), 0.0f, 0.0f);
+//        my_light.pos = glm::vec3(5.0f * cos(glm::radians((float)glfwGetTime() * 50.0f)), 0.0f, 5.0f * sin(glm::radians((float)glfwGetTime() * 50.0f)));
 
         world.draw(my_light);
-        world.update_light_conf(my_light.pos, my_light.color, camera.get_pos());
+        world.update_light_conf(my_light.pos, my_light.get_spec());
+        world.update_view_pos(camera.get_pos());
 
         world.update_shaders(camera.get_view(), camera.get_projection());
 

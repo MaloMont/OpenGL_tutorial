@@ -7,6 +7,7 @@
 
 #include "Shader.h"
 #include "Obj_type.h"
+#include "Material.h"
 
 // specific to each object
 struct _Instance
@@ -18,16 +19,18 @@ struct _Instance
              glm::vec3 _rotation_axis = glm::vec3(1.0f, 0.0f, 0.0f),
              float _rotation_angle = 0.0f);
 
-    glm::vec3 pos;
+    Obj_type type;
+
+    const Shader& shader;
+
+    glm::vec3 pos;         
     glm::vec3 scaling;
     glm::vec3 rotation_axis;
     float rotation_angle;
 
+    Material material = PERSO;
+
     glm::mat4 get_model_mat4() const;
-
-    const Shader& shader;
-
-    Obj_type type;
 };
 
 #endif

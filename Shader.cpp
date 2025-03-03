@@ -294,7 +294,7 @@ void Shader::set_uniform(const char* uniform_name, glm::vec3 vec) const
  */
 void Shader::set_model(glm::mat4 model) const
 {
-    set_uniform(MODEL.c_str(), model);
+    set_uniform(MODEL, model);
 }
 
 /**
@@ -303,7 +303,7 @@ void Shader::set_model(glm::mat4 model) const
  */
 void Shader::set_view(glm::mat4 view) const
 {
-    set_uniform(VIEW.c_str(), view);
+    set_uniform(VIEW, view);
 }
 
 /**
@@ -312,7 +312,7 @@ void Shader::set_view(glm::mat4 view) const
  */
 void Shader::set_projection(glm::mat4 projection) const
 {
-    set_uniform(PROJECTION.c_str(), projection);
+    set_uniform(PROJECTION, projection);
 }
 
 /**
@@ -321,5 +321,39 @@ void Shader::set_projection(glm::mat4 projection) const
  */
 void Shader::set_model_normals(glm::mat3 model_normals) const
 {
-    set_uniform(MODEL_NORMALS.c_str(), model_normals);
+    set_uniform(MODEL_NORMALS, model_normals);
 }
+
+/**
+ * @brief sets the material of the incoming object to be processed by the shader
+ * @param material the material caracteristics
+ */
+void Shader::set_material(Material material) const
+{
+    set_uniform(MATERIAL_AMBIENT, material.ambient);
+    set_uniform(MATERIAL_DIFFUSE, material.diffuse);
+    set_uniform(MATERIAL_SPECULAR, material.specular);
+    set_uniform(MATERIAL_SHININESS, material.shininess);
+}
+
+void Shader::bind_texture_unit(GLenum unit) const
+{
+    set_uniform(
+        std::string(TEXTURE_PREFIX + std::to_string((int)(unit - GL_TEXTURE0))).c_str(),
+        (int)(unit - GL_TEXTURE0)
+    );
+}
+
+void Shader::set_light(glm::vec3 pos, Material spec) const
+{
+    set_uniform(LIGHT_POS, pos);
+    set_uniform(LIGHT_AMBIENT, spec.ambient);
+    set_uniform(LIGHT_DIFFUSE, spec.diffuse);
+    set_uniform(LIGHT_SPECULAR, 0.5f * spec.specular);
+}
+
+void Shader::set_view_pos(glm::vec3 view_pos) const
+{
+    set_uniform(VIEW_POS, view_pos);
+}
+
