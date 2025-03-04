@@ -16,7 +16,7 @@ class Light : public Cube
 {
 private:
 
-    const char* LIGHT_TEXTURE = "../assets/textures/light.png";
+    const char* LIGHT_TEXTURE = "../assets/textures/white.png";
 
 public:
 

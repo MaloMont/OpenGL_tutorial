@@ -19,8 +19,8 @@ private:
     const static int NB_DATA_PER_VERTICE = 8;
     const static int NB_TO_DRAW = NB_VERTICES * NB_DATA_PER_VERTICE;
 
-    const char* DEFAULT_TEXTURE1 = "../assets/textures/container.jpg";
-    const char* DEFAULT_TEXTURE2 = "../assets/textures/awesomeface.png";
+    const char* DEFAULT_TEXTURE1 = "../assets/textures/white.png";
+    const char* DEFAULT_TEXTURE2 = "../assets/textures/white.png";
 
 public:
 
