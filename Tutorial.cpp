@@ -21,6 +21,7 @@ void Tutorial::init_glfw()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
@@ -35,7 +36,6 @@ void Tutorial::init_glfw()
         exit(-1);
     }
     glfwMakeContextCurrent(window);
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 }
 
@@ -49,6 +49,11 @@ void Tutorial::init_glad()
         std::cerr << "Failed to initialize GLAD" << std::endl;
         exit(-1);
     }
+
+    // DEBUG only
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, 1);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+    glDebugMessageCallback(errorHandler, NULL);
 }
 
 /**
@@ -136,7 +141,6 @@ void Tutorial::render_loop()
     my_light.pos = glm::vec3(1.0f,  0.0f,  0.0f);
     my_light.scaling = glm::vec3(0.2f, 0.2f, 0.2f);
     my_light.set_spec(DEFAULT_LIGHT);
-    my_light.material = LAMP;
 
     bool rotates[10];
     for(int i = 0 ; i < 10 ; ++i)

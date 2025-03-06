@@ -4,26 +4,42 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 #include <iostream>
+#include <cstring>
 
-#include "Shader.h"
+#include "Texture_spec.h"
+
+static const GLenum UNINITIALIZED_UNIT = GL_TEXTURE0 - 1;
 
 class Texture
 {
 public:
 
-    Texture(GLenum _unit, const char* path, bool && has_alpha_canal);
-    void load(const char* path, bool && has_alpha_canal);
+    Texture();
+    Texture(const char* diff_path, const bool diff_has_alpha, const char* spec_path, const bool spec_has_alpha);
+    Texture(Texture_spec spec);
+    ~Texture();
 
-    void activate(const Shader& shader);
+    void activate(const GLenum _diffuse_unit, const GLenum _specular_unit);
     void desactivate();
     void destroy();
 
-    unsigned int get_id() const;
+    void load(const char* diff_path, const bool diff_has_alpha, const char* spec_path, const bool spec_has_alpha);
+    void load(Texture_spec spec);
+
+    float get_shininess() const;
 
 private:
 
-    unsigned int texture;
-    GLenum unit;
+    void partial_load(unsigned int& texture, const char* path, const bool has_alpha_canal);
+
+    unsigned int diffuse_text;
+    unsigned int specular_text;
+    float shininess = 0.2f;
+
+    GLenum diffuse_unit = UNINITIALIZED_UNIT;
+    GLenum specular_unit = UNINITIALIZED_UNIT;
+
+    bool loaded = false;
 };
 
 #endif

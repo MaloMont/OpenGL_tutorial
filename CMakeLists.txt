@@ -8,11 +8,12 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(Tutorial)
 target_sources(Tutorial PRIVATE
     main.cpp
+    Texture.cpp
+    Ressources.cpp
     Tutorial.cpp
     Callbacks.cpp
     Camera.cpp
     Shader.cpp
-    Texture.cpp
     World.cpp
     Instance.cpp
     Object.cpp
@@ -37,4 +38,7 @@ target_include_directories(Tutorial PUBLIC
                           )
 configure_file(cmake_variables.h.in cmake_variables.h)
 
+## debug :
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -pg -fsanitize=address")
+
+# TODO: centralisation des ressources

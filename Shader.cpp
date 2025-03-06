@@ -40,9 +40,9 @@ bool Shader::load(std::string vertex_path, std::string fragment_path, std::strin
 
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
-
+    
     name = _name;
-
+    
     loaded = true;
 
     return true;
@@ -325,26 +325,29 @@ void Shader::set_model_normals(glm::mat3 model_normals) const
 }
 
 /**
- * @brief sets the material of the incoming object to be processed by the shader
- * @param material the material caracteristics
+ * @brief activates the given texture
+ * @param texture the texture to activate
  */
-void Shader::set_material(Material material) const
+void Shader::activate(ressources::ID id) const
 {
-    set_uniform(MATERIAL_AMBIENT, material.ambient);
-    set_uniform(MATERIAL_DIFFUSE, material.diffuse);
-    set_uniform(MATERIAL_SPECULAR, material.specular);
-    set_uniform(MATERIAL_SHININESS, material.shininess);
+    set_uniform(MATERIAL_DIFFUSE_MAP, DIFFUSE_UNIT);
+    set_uniform(MATERIAL_SPECULAR_MAP, SPECULAR_UNIT);
+
+    ressources::activate(id, GL_TEXTURE0 + DIFFUSE_UNIT, GL_TEXTURE0 + SPECULAR_UNIT);
+    set_uniform(MATERIAL_SHININESS, ressources::get_shininess(id));
 }
 
-void Shader::bind_texture_unit(GLenum unit) const
+/**
+ * @brief desactivates the given texture
+ * @param texture the texture to desactivate
+ */
+void Shader::desactivate(ressources::ID id) const
 {
-    set_uniform(
-        std::string(TEXTURE_PREFIX + std::to_string((int)(unit - GL_TEXTURE0))).c_str(),
-        (int)(unit - GL_TEXTURE0)
-    );
+    ressources::desactivate(id);
+    set_uniform(MATERIAL_SHININESS, (float)0.0);
 }
 
-void Shader::set_light(glm::vec3 pos, Material spec) const
+void Shader::set_light(glm::vec3 pos, Light_spec spec) const
 {
     set_uniform(LIGHT_POS, pos);
     set_uniform(LIGHT_AMBIENT, spec.ambient);

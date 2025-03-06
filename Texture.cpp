@@ -1,24 +1,82 @@
 #include "Texture.h"
 
+#include "debug_helper.h"
+
+
 /**
- * @brief Construct a new Texture object
- * @param _unit the texture unit through wich the texture will be sent to the shader
- * @param path the path of the texture image
- * @param has_alpha_canal whether the image has an alpha canal or not
+ * @brief Construct an empty new Texture object
  */
-Texture::Texture(GLenum _unit, const char* path, bool && has_alpha_canal)
+Texture::Texture()
 {
-    unit = _unit;
-    load(path, std::forward<bool>(has_alpha_canal));
+    loaded = false;
+}
+
+/**
+ * @brief Constructs a new Texture object
+ * @param diff_path the path of the diffuse texture
+ * @param diff_has_alpha whether the diffuse texture has an alpha canal or not
+ * @param spec_path the path of the specular texture
+ * @param spec_has_alpha whether the specular texture has an alpha canal or not
+ */
+Texture::Texture(const char* diff_path, const bool diff_has_alpha, const char* spec_path, const bool spec_has_alpha)
+{
+    std::cout << "loading by Texture::Texture : " << diff_path << " and " << spec_path << std::endl;
+    std::cout << diffuse_text << std::endl;
+    partial_load(diffuse_text, diff_path, diff_has_alpha);
+    std::cout << "became: " << diffuse_text << std::endl;
+    partial_load(specular_text, spec_path, spec_has_alpha);
+    loaded = true;
+}
+
+/**
+ * @brief Constructs a new Texture object
+ * @param spec a Texture_spec struct defining the specificities of the texture
+ */
+Texture::Texture(Texture_spec spec) : Texture(spec.diff_path, spec.diff_has_alpha, spec.spec_path, spec.spec_has_alpha)
+{   }
+
+/**
+ * @brief Destroys the Texture object
+ */
+Texture::~Texture()
+{
+    destroy();
+}
+
+/**
+ * @brief loads a texture from the files of the images
+ * @param diff_path the path to the diffuse texture
+ * @param diff_has_alpha true if the diffuse texture has an alpha canal
+ * @param spec_path the path to the specular texture
+ * @param spec_has_alpha true if the specular texture has an alpha canal
+ */
+void Texture::load(const char* diff_path, const bool diff_has_alpha, const char* spec_path, const bool spec_has_alpha)
+{
+    std::cout << "loading by Texture::load : " << diff_path << " and " << spec_path << std::endl;
+    destroy();
+    partial_load(diffuse_text, diff_path, diff_has_alpha);
+    partial_load(specular_text, spec_path, spec_has_alpha);
+    loaded = true;
+}
+
+/**
+ * @brief loads a texture from a Texture_spec struct
+ * @param spec the struct defining the texture properties
+ */
+void Texture::load(Texture_spec spec)
+{
+    load(spec.diff_path, spec.diff_has_alpha, spec.spec_path, spec.spec_has_alpha);
 }
 
 /**
  * @brief loads an OpenGL texture from the image at the given `path`
+ * @param texture the texture's future emplacement : either diffuse_text or specular_text
  * @param path the path to the image, from the executable
  * @param has_alpha_canal whether the image has an alpha canal or not
  */
-void Texture::load(const char* path, bool && has_alpha_canal)
+void Texture::partial_load(unsigned int& texture, const char* path, const bool has_alpha_canal)
 {
+    std::cout << "loading from file : " << path << std::endl;
     // OpenGL expects another kind of y axis
     stbi_set_flip_vertically_on_load(true);
 
@@ -31,6 +89,8 @@ void Texture::load(const char* path, bool && has_alpha_canal)
     }
 
     glGenTextures(1, &texture);
+
+    std::cout << "generated texture id : " << texture << "\n";
 
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -59,27 +119,29 @@ void Texture::load(const char* path, bool && has_alpha_canal)
     // generate a mipmap for the texture
     glGenerateMipmap(GL_TEXTURE_2D);
 
-    stbi_image_free(img);
-}
+//    glBindTexture(GL_TEXTURE_2D, 0);
 
-/**
- * @brief getter for the OpenGL texture object
- * @return unsigned int the id of the texture
- */
-unsigned int Texture::get_id() const
-{
-    return texture;
+    stbi_image_free(img);
 }
 
 /**
  * @brief activates the texture
  */
-void Texture::activate(const Shader& shader)
+void Texture::activate(const GLenum _diffuse_unit, const GLenum _specular_unit)
 {
-    shader.bind_texture_unit(unit);
+    if(not loaded)
+    {
+        std::cerr << "[WARNING]: Texture::activate: trying to activate an uninitialized texture." << std::endl;
+        return;
+    }
 
-    glActiveTexture(unit);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    diffuse_unit = _diffuse_unit;
+    glActiveTexture(diffuse_unit);
+    glBindTexture(GL_TEXTURE_2D, diffuse_text);
+
+    specular_unit = _specular_unit;
+    glActiveTexture(specular_unit);
+    glBindTexture(GL_TEXTURE_2D, specular_text);
 }
 
 /**
@@ -87,15 +149,42 @@ void Texture::activate(const Shader& shader)
  */
 void Texture::desactivate()
 {
-    glActiveTexture(unit);
-    glBindTexture(GL_TEXTURE_2D, 0);
-}
+    if(diffuse_unit != UNINITIALIZED_UNIT)
+    {
+        glActiveTexture(diffuse_unit);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    diffuse_unit = UNINITIALIZED_UNIT;
 
+    if(specular_unit != UNINITIALIZED_UNIT)
+    {
+        glActiveTexture(specular_unit);
+        glBindTexture(GL_TEXTURE_2D, 0);
+    }
+    specular_unit = UNINITIALIZED_UNIT;
+}
 
 /**
  * @brief destroys the texture
  */
 void Texture::destroy()
 {
-    glDeleteTextures(1, &texture);
+    if(not loaded)
+        return;
+
+    desactivate();
+
+    // no problems if the text are uninitialized (ie diffuse_text & specular_text = -1)
+    glDeleteTextures(1, &diffuse_text);
+    glDeleteTextures(1, &specular_text);
+
+    loaded = false;
+}
+
+/**
+ * @brief getter for the shininess param of the texture
+ */
+float Texture::get_shininess() const
+{
+    return shininess;
 }

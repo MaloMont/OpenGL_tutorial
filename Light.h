@@ -1,5 +1,5 @@
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef LIGHT_H
+#define LIGHT_H
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
@@ -8,16 +8,14 @@
 #include <string>
 
 #include "Cube.h"
+#include "Light_spec.h"
+#include "Texture.h"
 
 /**
  * @brief The light source 
  */
 class Light : public Cube
 {
-private:
-
-    const char* LIGHT_TEXTURE = "../assets/textures/white.png";
-
 public:
 
     Light(bool delay_init = false);
@@ -28,10 +26,10 @@ public:
     {
         using _Instance::_Instance;
 
-        Material spec = DEFAULT_LIGHT;
+        Light_spec spec = DEFAULT_LIGHT;
 
-        const Material get_spec() const { return spec; }
-        void set_spec(Material _spec);
+        const Light_spec get_spec() const { return spec; }
+        void set_spec(Light_spec _spec);
         void set_spec(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
     };
 

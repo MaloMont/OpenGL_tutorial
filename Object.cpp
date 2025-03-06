@@ -44,10 +44,10 @@ void Object::destroy()
     if(not loaded)
         return;
 
-    loaded = false;
-    remove_all_texture();
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+
+    loaded = false;
 }
 
 /**
@@ -100,21 +100,17 @@ void Object::buffer()
 
 
 /**
- * @brief draw Object vertex 
- * 
+ * @brief draws an Object
  * @param to_draw the parameters of the instance to draw (eg world position, shader, ...)
  */
-void Object::draw(const _Instance& to_draw)
+void Object::draw(_Instance& to_draw)
 {
-    to_draw.shader.set_material(to_draw.material);
-
-    for(auto && text : textures)
-        text.activate(to_draw.shader);
+    to_draw.shader.activate(to_draw.texture);
 
     glBindVertexArray(VAO);
 
     to_draw.shader.set_model(to_draw.get_model_mat4());
-    if(to_draw.type != LIGHT)
+    if(to_draw.type != LIGHT) // TODO: pourquoi ?
         to_draw.shader.set_model_normals(
             glm::mat3(glm::transpose(glm::inverse(to_draw.get_model_mat4())))
         );
@@ -123,53 +119,5 @@ void Object::draw(const _Instance& to_draw)
 
     glBindVertexArray(0);
 
-    for(auto && text : textures)
-        text.desactivate();
-}
-
-/**
- * @brief frees every texture the object has
- */
-void Object::remove_all_texture()
-{
-    while(not textures.empty())
-    {
-        if(texture_is_mine.back())
-            textures.back().destroy();
-
-        textures.pop_back();
-        texture_is_mine.pop_back();
-    }
-}
-
-/**
- * @brief replaces the current textures with the ones in the `_texture` vector.
- * Those textures are independent from the object and will not be destroyed by this object's destructor.
- * @param _textures the new textures
- */
-void Object::set_textures(std::vector<Texture> _textures)
-{
-    remove_all_texture();
-    for(auto && cur_texture : _textures)
-        bind_texture(cur_texture);
-}
-
-/**
- * @brief bind one texture to the object. The texture is independent from the object and will not be destroyed by this object's destructor.
- * @param _texture the texture object tobe added
- */
-void Object::bind_texture(Texture _texture)
-{
-    textures.push_back(_texture);
-    texture_is_mine.push_back(false);
-}
-
-/**
- * @brief creates a new texture specific to this object. When the object will be destroyed, the texture will also be destroyed.
- * @param _texture the texture object tobe added
- */
-void Object::add_texture(const char* path, bool && has_alpha_chanel)
-{
-    textures.push_back(Texture(GL_TEXTURE0 + textures.size(), path, std::forward<bool>(has_alpha_chanel)));
-    texture_is_mine.push_back(true);
+    to_draw.shader.desactivate(to_draw.texture);
 }

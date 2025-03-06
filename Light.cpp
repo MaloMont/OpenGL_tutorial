@@ -14,7 +14,7 @@ Light::~Light()
         return;
 
     while(not instances.empty())
-        instances.pop_back(); // nothing to destroy
+        instances.pop_back();
 
     destroy();
 
@@ -28,8 +28,6 @@ void Light::init()
 
     buffer();
 
-    add_texture(LIGHT_TEXTURE, true);
-
     loaded = true;
 }
 
@@ -40,17 +38,17 @@ void Light::init()
  */
 Light::Instance& Light::create(const Shader& shd)
 {
-    instances.push_back({LIGHT, shd});
+    instances.push_back({LIGHT, shd, LIGHT_DEFAULT_TEXTURE});
     return instances.back();
 }
 
-void Light::Instance::set_spec(Material _spec)
+void Light::Instance::set_spec(Light_spec _spec)
 {
     spec = _spec;
 }
 
 void Light::Instance::set_spec(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
 {
-    Material spec { ambient, diffuse, specular };
-    set_spec(spec);
+    Light_spec _spec { ambient, diffuse, specular };
+    set_spec(_spec);
 }

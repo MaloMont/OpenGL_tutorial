@@ -47,7 +47,7 @@ void World::update_shaders(glm::mat4 view, glm::mat4 projection)
  * @param pos the new light position
  * @param color the new light color
  */
-void World::update_light_conf(glm::vec3 pos, Material spec)
+void World::update_light_conf(glm::vec3 pos, Light_spec spec)
 {
     for(auto && itShader : shaders)
         if(itShader.is_loaded())
@@ -69,7 +69,7 @@ void World::update_view_pos(glm::vec3 view_pos)
  * @brief draws an object 
  * @param obj the object to draw
  */
-void World::draw(const _Instance& obj)
+void World::draw(_Instance& obj)
 {
     templates[obj.type] -> draw(obj);
 }

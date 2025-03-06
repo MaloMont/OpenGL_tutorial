@@ -15,8 +15,14 @@ Cube::Cube(bool delay_init /* = false */) : Object(delay_init)
  */
 Cube::~Cube()
 {
-    if(loaded)
-        destroy();
+    if(not loaded)
+        return;
+
+    while(not instances.empty())
+        instances.pop_back();
+
+    destroy();
+
     loaded = false;
 }
 
@@ -30,9 +36,6 @@ void Cube::init()
 
     buffer();
 
-    add_texture(DEFAULT_TEXTURE1, true);
-//    add_texture(DEFAULT_TEXTURE2, true);
-
     loaded = true;
 }
 
@@ -43,6 +46,6 @@ void Cube::init()
  */
 Cube::Instance& Cube::create(const Shader& shd)
 {
-    instances.push_back({CUBE, shd});
+    instances.push_back({CUBE, shd, DEFAULT_TEXTURE});
     return instances.back();
 }
