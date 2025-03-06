@@ -192,7 +192,7 @@ unsigned int Shader::get_location(const char* uniform_name) const
 {
     int location = glGetUniformLocation(shaderProgram, uniform_name);
     if(location < 0)
-        std::cerr << "[WARNING]: (in shader " << name << ") : couldn't find uniform location for \'" << uniform_name << "\'" << std::endl;
+        ;//TODO std::cerr << "[WARNING]: (in shader " << name << ") : couldn't find uniform location for \'" << uniform_name << "\'" << std::endl;
 
     return location;
 }

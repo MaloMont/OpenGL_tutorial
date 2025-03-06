@@ -28,12 +28,18 @@ public:
 
     float get_shininess() const;
 
+    unsigned int diffuse_text;
+    unsigned int specular_text;
+
 private:
+
+    Texture(const Texture &) = delete;
+    Texture(Texture &&) noexcept = delete;
+    Texture& operator=(const Texture &) = delete;
+    Texture& operator=(Texture &&) noexcept = delete;
 
     void partial_load(unsigned int& texture, const char* path, const bool has_alpha_canal);
 
-    unsigned int diffuse_text;
-    unsigned int specular_text;
     float shininess = 0.2f;
 
     GLenum diffuse_unit = UNINITIALIZED_UNIT;
