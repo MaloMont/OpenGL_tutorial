@@ -1,8 +1,10 @@
 #ifndef RESSOURCES_H
 #define RESSOURCES_H
 
-#include <string>
 #include <glad/glad.h>
+#include <stb_image.h>
+#include <iostream>
+#include <cstring>
 
 #include "Texture_spec.h"
 
@@ -22,6 +24,8 @@ namespace ressources
     float get_shininess(std::string name);
 
     std::string nameof(const std::string diffuse_path, const std::string specular_path);
+
+    void debug(ID id);
 }
 
 #endif

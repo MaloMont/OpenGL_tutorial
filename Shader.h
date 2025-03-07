@@ -94,7 +94,7 @@ VERTEX_PATH {
 },
 FRAGMENT_PATH {
     "../shaders/object.fshd",
-    "../shaders/light_source.fshd"
+    "../shaders/object.fshd"
 },
 SHADER_NAME {
     "Simple Object shader",

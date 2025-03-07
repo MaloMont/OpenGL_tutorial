@@ -152,6 +152,9 @@ void Tutorial::render_loop()
 
     while(not glfwWindowShouldClose(window))
     {
+        std::cout << "light : ";
+        ressources::debug(my_light.texture);
+
         float current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
@@ -174,6 +177,9 @@ void Tutorial::render_loop()
         {
             if(rotates[i])
                 my_cubes[i].rotation_angle = glm::radians((float)glfwGetTime() * 10.0f);
+
+            std::cout << "cube " << i << " : ";
+            ressources::debug(my_cubes[i].texture);
 
             world.draw(my_cubes[i]);
         }

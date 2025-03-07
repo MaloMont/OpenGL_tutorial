@@ -9,7 +9,7 @@
 
 #include "Cube.h"
 #include "Light_spec.h"
-#include "Texture.h"
+#include "Texture_spec.h"
 
 /**
  * @brief The light source 
