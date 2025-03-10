@@ -24,7 +24,10 @@ struct Light
     vec3 diffuse;
     vec3 specular;
 };
-uniform Light light;
+
+#define nbLights 3
+uniform Light light[nbLights];
+uniform int iLight;
 
 uniform mat3 model_normals; // model matrix for the normal vercors
 uniform vec3 View_pos;
@@ -52,12 +55,12 @@ void main()
 
     /* no specular since the object is self-lightened */
 
-    vec3 light_color = mypow(light.ambient * light.diffuse, 1.);
+    vec3 light_color = mypow(light[iLight].ambient * light[iLight].diffuse, 1.);
 
     vec3 result = mypow(
-          mypow((ambient + diffuse),                                        2.0)
-        * mypow(light_color + mypow(light.specular * diffuseStrenght, 1.),  8.0),
-                                                                            0.1
+          mypow((ambient + diffuse),                                                2.0)
+        * mypow(light_color + mypow(light[iLight].specular * diffuseStrenght, 1.),  8.0),
+                                                                                    0.1
         );
 
     FragColor = vec4(result, 1.0);

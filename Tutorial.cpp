@@ -138,9 +138,22 @@ void Tutorial::render_loop()
     auto my_cubes = setup();
 
     auto my_light = world.create<Light>(LIGHT, LIGHT_SHADER);
-    my_light.pos = glm::vec3(1.0f,  0.0f,  0.0f);
+    my_light.pos = glm::vec3(1.0f,  0.0f,  3.0f);
     my_light.scaling = glm::vec3(0.2f, 0.2f, 0.2f);
-    my_light.set_spec(DEFAULT_LIGHT);
+    my_light.set_spec(SPOT_LIGHT);
+    my_light.iLight = 0;
+
+    auto my_sun = world.create<Light>(LIGHT, LIGHT_SHADER);
+    my_sun.pos = glm::vec3(0.0f,  10.0f,  -5.0f);
+    my_sun.scaling = glm::vec3(0.2f, 0.2f, 0.2f);
+    my_sun.set_spec(SUN_LIGHT);
+    my_sun.spec.direction = my_sun.pos;
+    my_sun.iLight = 1;
+
+    auto my_torch = world.create<Light>(LIGHT, LIGHT_SHADER);
+    my_torch.scaling = glm::vec3(0.0001f, 0.0001f, 0.0001f);
+    my_torch.set_spec(SPOT_LIGHT);
+    my_torch.iLight = 2;
 
     bool rotates[10];
     for(int i = 0 ; i < 10 ; ++i)
@@ -152,9 +165,6 @@ void Tutorial::render_loop()
 
     while(not glfwWindowShouldClose(window))
     {
-        std::cout << "light : ";
-        ressources::debug(my_light.texture);
-
         float current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
@@ -162,24 +172,29 @@ void Tutorial::render_loop()
         process_input();
 
         // rendering
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(0.05f, 0.05f, 0.07f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 //        my_light.pos = glm::vec3(5.0f * cos(glm::radians((float)glfwGetTime() * 50.0f)), 0.0f, 5.0f * sin(glm::radians((float)glfwGetTime() * 50.0f)));
 
-        world.draw(my_light);
-        world.update_light_conf(my_light.pos, my_light.get_spec());
-        world.update_view_pos(camera.get_pos());
+        my_torch.pos = camera.get_pos();
+        my_torch.spec.direction = camera.get_direction();
 
+        world.draw(my_light);
+        world.draw(my_sun);
+        world.draw(my_torch);
+
+        world.update_light_conf(my_light.pos, my_light.get_spec(), my_light.iLight);
+        world.update_light_conf(my_sun.pos,   my_sun.get_spec(), my_sun.iLight);
+        world.update_light_conf(my_torch.pos, my_torch.get_spec(), my_torch.iLight);
+
+        world.update_view_pos(camera.get_pos());
         world.update_shaders(camera.get_view(), camera.get_projection());
 
         for(int i = 0 ; i < 10 ; ++i)
         {
             if(rotates[i])
                 my_cubes[i].rotation_angle = glm::radians((float)glfwGetTime() * 10.0f);
-
-            std::cout << "cube " << i << " : ";
-            ressources::debug(my_cubes[i].texture);
 
             world.draw(my_cubes[i]);
         }

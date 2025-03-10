@@ -192,7 +192,7 @@ unsigned int Shader::get_location(const char* uniform_name) const
 {
     int location = glGetUniformLocation(shaderProgram, uniform_name);
     if(location < 0)
-        ;//TODO std::cerr << "[WARNING]: (in shader " << name << ") : couldn't find uniform location for \'" << uniform_name << "\'" << std::endl;
+        std::cerr << "[WARNING]: (in shader " << name << ") : couldn't find uniform location for \'" << uniform_name << "\'" << std::endl;
 
     return location;
 }
@@ -347,12 +347,41 @@ void Shader::desactivate(ressources::ID id) const
     set_uniform(MATERIAL_SHININESS, (float)0.0);
 }
 
-void Shader::set_light(glm::vec3 pos, Light_spec spec) const
+void Shader::apply_param(std::string PARAM, auto param, int iLight) const
 {
-    set_uniform(LIGHT_POS, pos);
-    set_uniform(LIGHT_AMBIENT, spec.ambient);
-    set_uniform(LIGHT_DIFFUSE, spec.diffuse);
-    set_uniform(LIGHT_SPECULAR, 0.5f * spec.specular);
+    std::string param_name;
+    for(int i = 0 ; i < PARAM.size() ; ++i)
+    {
+        if(PARAM[i] == '.' and PARAM[i - 1] == 't')
+            param_name += "[" + std::to_string(iLight) + "].";
+        else
+            param_name += PARAM[i];
+    }
+
+    set_uniform(param_name.c_str(), param);
+}
+
+void Shader::set_light(glm::vec3 pos, Light_spec spec, int iLight) const
+{
+    apply_param(LIGHT_POS, pos, iLight);
+
+    apply_param(LIGHT_AMBIENT, spec.ambient, iLight);
+    apply_param(LIGHT_DIFFUSE, spec.diffuse, iLight);
+    apply_param(LIGHT_SPECULAR, spec.specular, iLight);
+
+    if(name == SHADER_NAME[OBJ_SHADER])
+    {
+        apply_param(LIGHT_IS_AT_INFINITY, spec.is_at_infinity, iLight);
+        apply_param(LIGHT_DIRECTION, spec.direction, iLight);
+
+        apply_param(LIGHT_IS_SPOTLIGHT, spec.is_spotlight, iLight);
+        apply_param(LIGHT_INNER_CUTOFF, spec.inner_cutoff, iLight);
+        apply_param(LIGHT_OUTER_CUTOFF, spec.outer_cutoff, iLight);
+
+        apply_param(LIGHT_ATTENUATION_CST, spec.attenuation.constant, iLight);
+        apply_param(LIGHT_ATTENUATION_LIN, spec.attenuation.linear, iLight);
+        apply_param(LIGHT_ATTENUATION_QUD, spec.attenuation.quadratic, iLight);
+    }
 }
 
 void Shader::set_view_pos(glm::vec3 view_pos) const

@@ -29,6 +29,7 @@ public:
     virtual void destroy();
     virtual bool is_loaded() const;
 
+    virtual void prepare_draw() = delete;
     virtual void draw(_Instance& to_draw);
 
 protected:

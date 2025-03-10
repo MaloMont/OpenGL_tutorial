@@ -41,6 +41,14 @@ private:
     const char* LIGHT_AMBIENT  = "light.ambient";
     const char* LIGHT_DIFFUSE  = "light.diffuse";
     const char* LIGHT_SPECULAR = "light.specular";
+    const char* LIGHT_IS_AT_INFINITY = "light.is_at_infinity";
+    const char* LIGHT_DIRECTION = "light.direction";
+    const char* LIGHT_IS_SPOTLIGHT = "light.is_spotlight";
+    const char* LIGHT_INNER_CUTOFF = "light.inner_cutoff";
+    const char* LIGHT_OUTER_CUTOFF = "light.outer_cutoff";
+    const char* LIGHT_ATTENUATION_CST = "light.attenuation.constant";
+    const char* LIGHT_ATTENUATION_LIN = "light.attenuation.linear";
+    const char* LIGHT_ATTENUATION_QUD = "light.attenuation.quadratic";
 
     const char* MATERIAL_DIFFUSE_MAP  = "material.diffuse";
     const int   DIFFUSE_UNIT          = 0;
@@ -76,7 +84,9 @@ public:
     void set_model_normals(glm::mat3 model_normals) const;
     void activate(ressources::ID id) const;
     void desactivate(ressources::ID id) const;
-    void set_light(glm::vec3 pos, Light_spec spec) const;
+
+    void apply_param(std::string PARAM, auto param, int iLight) const;
+    void set_light(glm::vec3 pos, Light_spec spec, int iLight) const;
 
     std::string get_name() const { return name; }
 };
@@ -94,7 +104,7 @@ VERTEX_PATH {
 },
 FRAGMENT_PATH {
     "../shaders/object.fshd",
-    "../shaders/object.fshd"
+    "../shaders/light_source.fshd"
 },
 SHADER_NAME {
     "Simple Object shader",

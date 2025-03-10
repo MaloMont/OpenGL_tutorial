@@ -47,11 +47,11 @@ void World::update_shaders(glm::mat4 view, glm::mat4 projection)
  * @param pos the new light position
  * @param color the new light color
  */
-void World::update_light_conf(glm::vec3 pos, Light_spec spec)
+void World::update_light_conf(glm::vec3 pos, Light_spec spec, int iLight)
 {
     for(auto && itShader : shaders)
         if(itShader.is_loaded())
-            itShader.set_light(pos, spec);
+            itShader.set_light(pos, spec, iLight);
 }
 
 /**

@@ -18,12 +18,10 @@ _Instance::_Instance(const Obj_type _type,
           rotation_axis { _rotation_axis },
           rotation_angle { _rotation_angle }
 {
-    std::cout << "- instance constructor called." << std::endl;
 }
 
 _Instance::~_Instance()
 {
-    std::cout << "instance destructor called." << std::endl;
 }
 
 /**
@@ -48,3 +46,9 @@ void _Instance::set_texture(ressources::ID id)
 {
     texture = id;
 }
+
+/**
+ * @brief called by Object::draw before drawing an Instance
+ */
+void _Instance::prepare_draw()
+{ }

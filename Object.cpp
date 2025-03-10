@@ -6,7 +6,6 @@
  */
 Object::Object(bool delay_init /* = false */)
 {
-    std::cout << "object::object : " << delay_init << ".\n";
     if(not delay_init)
         init();
 }
@@ -110,10 +109,14 @@ void Object::draw(_Instance& to_draw)
     glBindVertexArray(VAO);
 
     to_draw.shader.set_model(to_draw.get_model_mat4());
-    if(to_draw.type != LIGHT) // TODO: pourquoi ?
+    if(to_draw.type != LIGHT)
+    {
         to_draw.shader.set_model_normals(
             glm::mat3(glm::transpose(glm::inverse(to_draw.get_model_mat4())))
         );
+    }
+
+    to_draw.prepare_draw();
 
     glDrawArrays(GL_TRIANGLES, 0, NB_TO_DRAW);
 

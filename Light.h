@@ -26,11 +26,12 @@ public:
     {
         using _Instance::_Instance;
 
-        Light_spec spec = DEFAULT_LIGHT;
+        Light_spec spec = SUN_LIGHT;
+        int iLight = 0;
 
         const Light_spec get_spec() const { return spec; }
         void set_spec(Light_spec _spec);
-        void set_spec(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
+        void prepare_draw();
     };
 
 private:

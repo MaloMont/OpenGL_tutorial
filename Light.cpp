@@ -47,8 +47,7 @@ void Light::Instance::set_spec(Light_spec _spec)
     spec = _spec;
 }
 
-void Light::Instance::set_spec(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular)
+void Light::Instance::prepare_draw()
 {
-    Light_spec _spec { ambient, diffuse, specular };
-    set_spec(_spec);
+    shader.set_uniform("iLight", iLight);
 }

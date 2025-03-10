@@ -36,6 +36,7 @@ struct _Instance
 
     glm::mat4 get_model_mat4() const;
     void set_texture(ressources::ID id);
+    virtual void prepare_draw();
 };
 
 #endif

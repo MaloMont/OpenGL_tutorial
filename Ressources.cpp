@@ -18,7 +18,7 @@ struct Texture
     GLenum diffuse_unit = UNINITIALIZED_UNIT;
     GLenum specular_unit = UNINITIALIZED_UNIT;
 
-    float shininess = 0.2f;
+    float shininess = 64.0f;
 
     bool loaded = false;
 };
@@ -73,7 +73,6 @@ void partial_load(unsigned int& texture, const char* path)
 {
     bool has_alpha_canal = img_has_alpha(path);
 
-    std::cout << "loading from file : " << path << std::endl;
     // OpenGL expects another kind of y axis
     stbi_set_flip_vertically_on_load(true);
 
@@ -86,8 +85,6 @@ void partial_load(unsigned int& texture, const char* path)
     }
 
     glGenTextures(1, &texture);
-
-    std::cout << "generated texture id : " << texture << "\n";
 
     glBindTexture(GL_TEXTURE_2D, texture);
 
@@ -200,8 +197,6 @@ void activate(const ID id, const GLenum diffuse_unit, const GLenum specular_unit
         std::cerr << "[WARNING]: activate: trying to activate an uninitialized texture." << std::endl;
         return;
     }
-
-    std::cout << text.diffuse_text << ", " << text.specular_text << std::endl;
 
     text.diffuse_unit = diffuse_unit;
     glActiveTexture(text.diffuse_unit);

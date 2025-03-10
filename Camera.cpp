@@ -107,11 +107,20 @@ glm::mat4 Camera::get_projection() const
 
 /**
  * @brief get the world position of the camera
- * @return glm::vec3 
+ * @return glm::vec3 the pos
  */
 glm::vec3 Camera::get_pos() const
 {
     return pos;
+}
+
+/**
+ * @brief get the world direction of the camera
+ * @return glm::vec3 the dir
+ */
+glm::vec3 Camera::get_direction() const
+{
+    return direction;
 }
 
 /**

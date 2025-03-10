@@ -39,6 +39,6 @@ target_include_directories(Tutorial PUBLIC
 configure_file(cmake_variables.h.in cmake_variables.h)
 
 ## debug :
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -pg -fsanitize=address")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -g -pg -fsanitize=address")
 
-# TODO: centralisation des ressources
+# TODO: emission maps (cf exercices upon diffuse and specular lighting)

@@ -1,0 +1,101 @@
+save:
+
+#version 330 core
+
+/* object.fshd */
+
+out vec4 FragColor;
+
+in vec3 Normal;
+in vec2 TexCoord;
+in vec3 Frag_pos;
+
+struct Material
+{
+    sampler2D diffuse;
+    sampler2D specular;
+    float shininess;
+};
+uniform Material material;
+
+struct Attenuation
+{
+    float constant;
+    float linear;
+    float quadratic;
+};
+struct Light
+{
+    vec3 pos;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+
+    bool is_at_infinity;
+    vec3 direction;
+
+    bool is_spotlight;
+    float inner_cutoff;
+    float outer_cutoff;
+
+    Attenuation attenuation;
+};
+uniform Light light;
+
+uniform mat3 model_normals; // model matrix for the normal vercors
+uniform vec3 View_pos;
+
+void main()
+{
+    vec3 normal = normalize(model_normals *  Normal);
+
+    // ambient
+    vec3 ambient = vec3(texture(material.diffuse, TexCoord)) * light.ambient;
+
+    // diffuse
+    vec3 light_ray;
+    float d;
+    if(light.is_at_infinity)
+    {
+        light_ray = normalize(light.direction);
+        d = 1.0;
+    }
+    else
+    {
+        light_ray = normalize(light.pos - Frag_pos);
+        d = length(light.pos - Frag_pos);
+    }
+
+
+    float attenuation = 1.0 / (
+        light.attenuation.constant
+        + light.attenuation.linear * d
+        + light.attenuation.quadratic * d * d
+    );
+
+    float diffuseStrenght = max(0.0, dot(normal, light_ray));
+    vec3 diffuse = diffuseStrenght * vec3(texture(material.diffuse, TexCoord)) * light.diffuse;
+
+    // specular
+    vec3 view_dir = normalize(View_pos - Frag_pos);
+    vec3 reflected_ray = reflect(-light_ray, normal);
+    float specularStrenght = pow( max(dot(view_dir, reflected_ray), 0.0), material.shininess );
+    vec3 specular = specularStrenght * vec3(texture(material.specular, TexCoord)) * light.specular;
+
+
+    vec3 result = (ambient + diffuse + specular) * attenuation;
+
+    if(light.is_spotlight)
+    {
+        float angle_distance = dot(-normalize(light.direction), light_ray);
+
+        float delta_angle = light.inner_cutoff - light.outer_cutoff;
+        float intensity = clamp((angle_distance - light.outer_cutoff) / delta_angle, 0.0, 1.0);
+
+        result *= intensity;
+    }
+
+
+    FragColor = vec4(result, 1.0);
+}

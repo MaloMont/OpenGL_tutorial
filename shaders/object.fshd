@@ -1,3 +1,5 @@
+
+
 #version 330 core
 
 /* object.fshd */
@@ -16,6 +18,12 @@ struct Material
 };
 uniform Material material;
 
+struct Attenuation
+{
+    float constant;
+    float linear;
+    float quadratic;
+};
 struct Light
 {
     vec3 pos;
@@ -23,32 +31,79 @@ struct Light
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    bool is_at_infinity;
+    vec3 direction;
+
+    bool is_spotlight;
+    float inner_cutoff;
+    float outer_cutoff;
+
+    Attenuation attenuation;
 };
-uniform Light light;
+
+#define nbLights 3
+uniform Light light[nbLights];
 
 uniform mat3 model_normals; // model matrix for the normal vercors
 uniform vec3 View_pos;
 
 void main()
 {
-//    vec3 objColor = vec3(1.0, 1.0, 1.0);
     vec3 normal = normalize(model_normals *  Normal);
 
-    // ambient
-    vec3 ambient = vec3(texture(material.diffuse, TexCoord)) * light.ambient;
+    vec3 global = vec3(0.0);
+    for(int iLight = 0 ; iLight < nbLights ; ++iLight)
+    {
+        // ambient
+        vec3 ambient = vec3(texture(material.diffuse, TexCoord)) * light[iLight].ambient;
 
-    // diffuse
-    vec3 light_ray = normalize(light.pos - Frag_pos);
-    float diffuseStrenght = max(0.0, dot(normal, light_ray));
-    vec3 diffuse = diffuseStrenght * vec3(texture(material.diffuse, TexCoord)) * light.diffuse;
+        // diffuse
+        vec3 light_ray;
+        float d;
+        if(light[iLight].is_at_infinity)
+        {
+            light_ray = normalize(light[iLight].direction);
+            d = 1.0;
+        }
+        else
+        {
+            light_ray = normalize(light[iLight].pos - Frag_pos);
+            d = length(light[iLight].pos - Frag_pos);
+        }
 
-    // specular
-    vec3 view_dir = normalize(View_pos - Frag_pos);
-    vec3 reflected_ray = reflect(-light_ray, normal);
-    float specularStrenght = pow( max(dot(view_dir, reflected_ray), 0.0), material.shininess );
-    vec3 specular = specularStrenght * vec3(texture(material.specular, TexCoord)) * light.specular;
 
-    vec3 result = ambient + diffuse + specular;
+        float attenuation = 1.0 / (
+            light[iLight].attenuation.constant
+            + light[iLight].attenuation.linear * d
+            + light[iLight].attenuation.quadratic * d * d
+        );
 
-    FragColor = vec4(result, 1.0);
+        float diffuseStrenght = max(0.0, dot(normal, light_ray));
+        vec3 diffuse = diffuseStrenght * vec3(texture(material.diffuse, TexCoord)) * light[iLight].diffuse;
+
+        // specular
+        vec3 view_dir = normalize(View_pos - Frag_pos);
+        vec3 reflected_ray = reflect(-light_ray, normal);
+        float specularStrenght = pow( max(dot(view_dir, reflected_ray), 0.0), material.shininess );
+        vec3 specular = specularStrenght * vec3(texture(material.specular, TexCoord)) * light[iLight].specular;
+
+
+        vec3 result = (ambient + diffuse + specular) * attenuation;
+
+        if(light[iLight].is_spotlight)
+        {
+            float angle_distance = dot(-normalize(light[iLight].direction), light_ray);
+
+            float delta_angle = light[iLight].inner_cutoff - light[iLight].outer_cutoff;
+            float intensity = clamp((angle_distance - light[iLight].outer_cutoff) / delta_angle, 0.0, 1.0);
+
+            result *= intensity;
+        }
+
+        global += result;
+    }
+
+
+    FragColor = vec4(global, 1.0);
 }

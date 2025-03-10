@@ -41,7 +41,7 @@ public:
     }
 
     void update_shaders(glm::mat4 view, glm::mat4 projection);
-    void update_light_conf(glm::vec3 pos, Light_spec spec);
+    void update_light_conf(glm::vec3 pos, Light_spec spec, int iLight);
     void update_view_pos(glm::vec3 view_pos);
 
     void draw(_Instance& obj);
