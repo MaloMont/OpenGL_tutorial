@@ -52,7 +52,7 @@ constexpr Light_spec SUN_LIGHT {
 
 constexpr Light_spec SPOT_LIGHT {
     {0.4f, 0.3f, 0.2f},
-    {1.0f, 0.8f, 0.55f},
+    {1.0f, 0.6f, 0.55f},
     {1.0f, 1.0f, 1.0f},
     32.0f,
     false, {0.0f, 0.0f, -1.0f},

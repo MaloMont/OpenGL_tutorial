@@ -47,7 +47,7 @@ private:
     // matrix to apply perspective
     glm::mat4 projection;
 
-    const float speed = 2.5f; // how fast the camera moves
+    const float speed = 4.0f; // how fast the camera moves
     const float sensitivity = 0.1f; // factor bewteen mouse movment and camera movment
 };
 
