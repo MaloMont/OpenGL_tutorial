@@ -27,7 +27,7 @@ struct _Instance
 
     const Shader& shader;
 
-    ressources::ID texture;
+    ressources::TEXTID texture;
 
     glm::vec3 pos;         
     glm::vec3 scaling;
@@ -35,7 +35,7 @@ struct _Instance
     float rotation_angle;
 
     glm::mat4 get_model_mat4() const;
-    void set_texture(ressources::ID id);
+    void set_texture(ressources::TEXTID id);
     virtual void prepare_draw();
 };
 

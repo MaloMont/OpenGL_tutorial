@@ -17,6 +17,8 @@
 #include "Shader.h"
 #include "World.h"
 #include "Camera.h"
+#include "Model.h"
+#include "Ressources.h"
 
 #include "debug_helper.h"
 

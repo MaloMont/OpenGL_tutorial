@@ -34,7 +34,7 @@ void Texture::activate(const GLenum _diffuse_unit, const GLenum _specular_unit)
 }
 
 /**
- * @brief activates the texture
+ * @brief desactivates the texture
  */
 void Texture::desactivate()
 {

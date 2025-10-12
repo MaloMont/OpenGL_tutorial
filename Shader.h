@@ -82,8 +82,8 @@ public:
     void set_view(glm::mat4 view) const;
     void set_projection(glm::mat4 projection) const;
     void set_model_normals(glm::mat3 model_normals) const;
-    void activate(ressources::ID id) const;
-    void desactivate(ressources::ID id) const;
+    void activate(ressources::TEXTID id) const;
+    void desactivate(ressources::TEXTID id) const;
 
     void apply_param(std::string PARAM, auto param, int iLight) const;
     void set_light(glm::vec3 pos, Light_spec spec, int iLight) const;

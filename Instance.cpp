@@ -42,7 +42,7 @@ glm::mat4 _Instance::get_model_mat4() const
  * @brief replaces the current textures with the new given one
  * @param id the new texture's id
  */
-void _Instance::set_texture(ressources::ID id)
+void _Instance::set_texture(ressources::TEXTID id)
 {
     texture = id;
 }

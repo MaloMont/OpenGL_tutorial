@@ -24,9 +24,9 @@ struct Texture
 };
 
 static std::vector<Texture> textures;
-static std::unordered_map<std::string, ID> id_by_name;
+static std::unordered_map<std::string, TEXTID> id_by_name;
 
-constexpr static ID ERROR_ID = (1 << 14);
+constexpr static TEXTID ERROR_ID = (1 << 14);
 
 
 std::string nameof(const std::string diffuse_path, const std::string specular_path)
@@ -44,7 +44,7 @@ bool loaded(const std::string diffuse_path, const std::string specular_path)
     return loaded(nameof(diffuse_path, specular_path));
 }
 
-ID find(std::string name)
+TEXTID find(std::string name)
 {
     auto id = ressources::id_by_name.find(name);
 
@@ -125,7 +125,7 @@ void partial_load(unsigned int& texture, const char* path)
  * @param specular_path the path to the image og the specular texture
  * @return ID the id of the texture corresponding to the pair of path
  */
-ID get_texture(const std::string diffuse_path, const std::string specular_path)
+TEXTID get_texture(const std::string diffuse_path, const std::string specular_path)
 {
     std::string name = nameof(diffuse_path, specular_path);
 
@@ -139,7 +139,7 @@ ID get_texture(const std::string diffuse_path, const std::string specular_path)
 
     textures.push_back(text);
 
-    ID id = textures.size() - 1;
+    TEXTID id = textures.size() - 1;
 
     id_by_name.insert({name, id});
 
@@ -153,7 +153,7 @@ ID get_texture(const std::string diffuse_path, const std::string specular_path)
  * @param specular_path the path to the image og the specular texture
  * @return ID the id of the texture corresponding to the pair of path
  */
-ID get_texture(const Texture_spec spec)
+TEXTID get_texture(const Texture_spec spec)
 {
     std::string diffuse_path = spec.diff_path, specular_path = spec.spec_path;
 
@@ -169,12 +169,13 @@ ID get_texture(const Texture_spec spec)
 
     textures.push_back(text);
 
-    ID id = textures.size() - 1;
+    TEXTID id = textures.size() - 1;
 
     id_by_name.insert({name, id});
 
     return id;
 }
+
 
 /**
  * @brief activates and binds the given texture of the given units
@@ -182,7 +183,7 @@ ID get_texture(const Texture_spec spec)
  * @param diffuse_unit the unit for the diffuse texture
  * @param specular_unit the unit for the specular texture
  */
-void activate(const ID id, const GLenum diffuse_unit, const GLenum specular_unit)
+void activate(const TEXTID id, const GLenum diffuse_unit, const GLenum specular_unit)
 {
     if(id >= ressources::textures.size())
     {
@@ -212,7 +213,7 @@ void activate(const ID id, const GLenum diffuse_unit, const GLenum specular_unit
  */
 void activate(const std::string name, const GLenum diffuse_unit, const GLenum specular_unit)
 {
-    ID id = find(name);
+    TEXTID id = find(name);
 
     if(id != ERROR_ID)
         activate( id, diffuse_unit, specular_unit );
@@ -220,7 +221,7 @@ void activate(const std::string name, const GLenum diffuse_unit, const GLenum sp
 /**
  * @brief desactivates the texture
  */
-void desactivate(const ID id)
+void desactivate(const TEXTID id)
 {
     if(id >= ressources::textures.size())
     {
@@ -250,7 +251,7 @@ void desactivate(const ID id)
  */
 void desactivate(const std::string name)
 {
-    ID id = find(name);
+    TEXTID id = find(name);
 
     if(id == ERROR_ID)
     {
@@ -261,7 +262,7 @@ void desactivate(const std::string name)
     desactivate(id);
 }
 
-float get_shininess(const ID id)
+float get_shininess(const TEXTID id)
 {
     return ressources::textures[id].shininess;
 }
@@ -271,12 +272,10 @@ float get_shininess(std::string name)
     return get_shininess(find(name));
 }
 
-void debug(ID id)
+void debug(TEXTID id)
 {
     std::cout << ressources::textures[id].diffuse_text << " and "
               << ressources::textures[id].specular_text
               << std::endl;
 }
-
-
 }

@@ -328,7 +328,7 @@ void Shader::set_model_normals(glm::mat3 model_normals) const
  * @brief activates the given texture
  * @param texture the texture to activate
  */
-void Shader::activate(ressources::ID id) const
+void Shader::activate(ressources::TEXTID id) const
 {
     set_uniform(MATERIAL_DIFFUSE_MAP, DIFFUSE_UNIT);
     set_uniform(MATERIAL_SPECULAR_MAP, SPECULAR_UNIT);
@@ -341,7 +341,7 @@ void Shader::activate(ressources::ID id) const
  * @brief desactivates the given texture
  * @param texture the texture to desactivate
  */
-void Shader::desactivate(ressources::ID id) const
+void Shader::desactivate(ressources::TEXTID id) const
 {
     ressources::desactivate(id);
     set_uniform(MATERIAL_SHININESS, (float)0.0);

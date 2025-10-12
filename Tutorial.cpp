@@ -159,6 +159,8 @@ void Tutorial::render_loop()
     for(int i = 0 ; i < 10 ; ++i)
         rotates[i] = (i % 3 == 0);
 
+    Model backpack(ASSETS + "textures/Backpack/backpack.obj");
+
     glEnable(GL_DEPTH_TEST);
 
     float last_frame = glfwGetTime(); // Time of last frame
@@ -183,6 +185,7 @@ void Tutorial::render_loop()
         world.draw(my_light);
         world.draw(my_sun);
         world.draw(my_torch);
+        backpack.draw();
 
         world.update_light_conf(my_light.pos, my_light.get_spec(), my_light.iLight);
         world.update_light_conf(my_sun.pos,   my_sun.get_spec(), my_sun.iLight);
