@@ -15,11 +15,11 @@ target_sources(Tutorial PRIVATE
     Camera.cpp
     Shader.cpp
     World.cpp
-    Instance.cpp
-
     Object.cpp
-    Cube.cpp
-    Light.cpp
+
+    # Instance.cpp
+    # Cube.cpp
+    # Light.cpp
 
     assimp_utils.cpp
     Mesh.cpp

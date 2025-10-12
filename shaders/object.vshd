@@ -18,10 +18,9 @@ void main()
 {
     vec4 pos = vec4(aPos.xyz, 1.0);
 
-    // note that we read the multiplication from right to left
-    gl_Position = projection * view * model * pos;
-
     Normal = aNormal;
     Frag_pos = vec3(model * pos);
     TexCoord = aTexCoord;
+
+    gl_Position = projection * view * model * pos;
 }

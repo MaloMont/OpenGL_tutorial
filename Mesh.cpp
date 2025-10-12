@@ -4,11 +4,14 @@
 Mesh::Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, std::vector<ressources::TEXTID> _texture)
      : vertices { _vertices }, indices { _indices }, texture { _texture }
 {
+    init();
 }
 
 /** @brief initializes mesh's VAO, VBO and EBO */
 void Mesh::init()
 {
+    std::cout << "initialized mesh\n";
+
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);
@@ -42,18 +45,10 @@ void Mesh::draw(Shader &shader)
     shader.activate(texture[0]);
     glBindVertexArray(VAO);
 
-//        to_draw.shader.set_model(to_draw.get_model_mat4());
-//        if(to_draw.type != LIGHT)
-//        {
-//            to_draw.shader.set_model_normals(
-//                glm::mat3(glm::transpose(glm::inverse(to_draw.get_model_mat4())))
-//            );
-//        }
-//
-//        to_draw.prepare_draw();
-
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
     shader.desactivate(texture[0]);
+
+ //   std::cout << "\nshader done writting object" << std::endl;
 }

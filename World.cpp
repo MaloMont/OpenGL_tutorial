@@ -2,15 +2,12 @@
 
 World::World()
 {
-    // the initialization is delayed so that it occurs after the initialization of the libraries
-    templates[CUBE] = new Cube(true);
-    templates[LIGHT] = new Light(true);
+
 }
 
 World::~World()
 {
-    for(auto && it : templates)
-        delete it;
+
 }
 
 /**
@@ -18,9 +15,6 @@ World::~World()
  */
 void World::destroy()
 {
-    for(auto && it : templates)
-        it->destroy();
-
     for(auto && itShader : shaders)
         itShader.destroy();
 }
@@ -65,12 +59,10 @@ void World::update_view_pos(glm::vec3 view_pos)
             itShader.set_view_pos(view_pos);
 }
 
-/**
- * @brief draws an object 
- * @param obj the object to draw
- */
-void World::draw(_Instance& obj)
+Shader& World::get_shader(const Shader_type shd_type)
 {
-    templates[obj.type] -> draw(obj);
-}
+    if(not shaders[shd_type].is_loaded())
+        shaders[shd_type].load(VERTEX_PATH[shd_type], FRAGMENT_PATH[shd_type], SHADER_NAME[shd_type]);
 
+    return shaders[shd_type];
+}

@@ -17,7 +17,7 @@
 #include "Shader.h"
 #include "World.h"
 #include "Camera.h"
-#include "Model.h"
+#include "Object.h"
 #include "Ressources.h"
 
 #include "debug_helper.h"
@@ -37,8 +37,6 @@ public:
     void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 
 private:
-
-    auto setup(); // TODO: remove
 
     GLFWwindow* window;
     const int WIN_WIDTH = 800;
