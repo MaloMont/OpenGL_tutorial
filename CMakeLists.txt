@@ -16,10 +16,7 @@ target_sources(Tutorial PRIVATE
     Shader.cpp
     World.cpp
     Object.cpp
-
-    # Instance.cpp
-    # Cube.cpp
-    # Light.cpp
+    Light.cpp
 
     assimp_utils.cpp
     Mesh.cpp

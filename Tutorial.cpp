@@ -109,6 +109,9 @@ void Tutorial::render_loop()
 {
     Object backpack(ASSETS + "textures/Backpack/backpack.obj", world.get_shader(OBJ_SHADER));
 
+    Light light(ASSETS + "textures/Backpack/backpack.obj", world.get_shader(OBJ_SHADER), SUN_LIGHT);
+    light.pos = { 7.0f, 0.0f, 0.0f };
+
     glEnable(GL_DEPTH_TEST);
 
     float last_frame = glfwGetTime(); // Time of last frame
@@ -127,6 +130,7 @@ void Tutorial::render_loop()
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         backpack.draw();
+        light.draw();
 
         world.update_view_pos(camera.get_pos());
         world.update_shaders(camera.get_view(), camera.get_projection());

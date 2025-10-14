@@ -10,8 +10,6 @@ Mesh::Mesh(std::vector<Vertex> _vertices, std::vector<unsigned int> _indices, st
 /** @brief initializes mesh's VAO, VBO and EBO */
 void Mesh::init()
 {
-    std::cout << "initialized mesh\n";
-
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
     glGenBuffers(1, &EBO);

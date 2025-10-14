@@ -18,6 +18,7 @@
 #include "World.h"
 #include "Camera.h"
 #include "Object.h"
+#include "Light.h"
 #include "Ressources.h"
 
 #include "debug_helper.h"

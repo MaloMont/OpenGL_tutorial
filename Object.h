@@ -25,7 +25,7 @@ public:
 
     void draw();
 
-private:
+protected:
 
     Shader& shader;
     Model model;

@@ -10,7 +10,7 @@
 class Camera
 {
 public:
-    Camera(int win_width, int win_height, glm::vec3 _pos = glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3 _direction = glm::vec3(0.0f, 0.0f, -1.0f));
+    Camera(int win_width, int win_height, glm::vec3 _pos = glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3 _direction = glm::vec3(0.0f, 0.0f, -1.0f));
 
     void set_pos(glm::vec3 _pos);
     void set_target(glm::vec3 _target);
@@ -33,9 +33,9 @@ private:
 
     const glm::vec3 y_axis = glm::vec3(0.0f, 1.0f, 0.0f);
 
-    glm::vec3 pos = glm::vec3(0.0f, 0.0f, 3.0f);
-    glm::vec3 direction = glm::vec3(0.0, 0.0, -1.0f);
-    glm::vec3 target = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 pos;
+    glm::vec3 direction;
+    glm::vec3 target;
 
     float yaw = -90.0f;
     float pitch = 0.0f;

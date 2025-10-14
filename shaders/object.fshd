@@ -1,5 +1,3 @@
-
-
 #version 330 core
 
 /* object.fshd */
@@ -9,6 +7,8 @@ out vec4 FragColor;
 in vec3 Normal;
 in vec2 TexCoord;
 in vec3 Frag_pos;
+
+/* Light struct */
 
 struct Material
 {
@@ -24,6 +24,7 @@ struct Attenuation
     float linear;
     float quadratic;
 };
+
 struct Light
 {
     vec3 pos;
@@ -42,8 +43,9 @@ struct Light
     Attenuation attenuation;
 };
 
-#define nbLights 3
+#define nbLights 1
 uniform Light light[nbLights];
+
 
 uniform mat3 model_normals; // model matrix for the normal vercors
 uniform vec3 View_pos;
@@ -104,8 +106,7 @@ void main()
         global += result;
     }
 
+    FragColor = vec4(global, 1.0);
 
-//    FragColor = vec4(global, 1.0);
-
-    FragColor = vec4(1.0, 0.5, 0.1, 1.0);
+//    FragColor = vec4(1.0, 0.5, 0.1, 1.0);
 }
