@@ -40,9 +40,9 @@ void Model::loadNode(aiNode *node, const aiScene *scene)
         loadNode(node->mChildren[i], scene);
 }
 
-inline unsigned int min(unsigned int a, unsigned int b)
+inline unsigned int max(unsigned int a, unsigned int b)
 {
-    return (a < b) ? a : b;
+    return (a > b) ? a : b;
 }
 
 Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
@@ -83,18 +83,32 @@ Mesh Model::loadMesh(aiMesh *mesh, const aiScene *scene)
     {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-        for(unsigned int i = 0 ; i < min( material->GetTextureCount(aiTextureType_SPECULAR),
-                                          material->GetTextureCount(aiTextureType_DIFFUSE)) ; ++i)
-        {
-            aiString diffName, specName;
-            material->GetTexture(aiTextureType_DIFFUSE, i, &diffName);
-            material->GetTexture(aiTextureType_SPECULAR, i, &specName);
-            textures.push_back(ressources::get_texture(dir + diffName.C_Str(), dir + specName.C_Str()));
-        }
+        unsigned int specCount = material->GetTextureCount(aiTextureType_SPECULAR);
+        unsigned int diffCount = material->GetTextureCount(aiTextureType_DIFFUSE);
 
-        if(material->GetTextureCount(aiTextureType_SPECULAR) != material->GetTextureCount(aiTextureType_DIFFUSE))
+        for(unsigned int i = 0 ; i < max(specCount, diffCount) ; ++i)
         {
-            std::cerr << "textures bizarres. Model::loadMesh. \n" << std::endl;
+            std::string diffPath, specPath;
+            
+            if(i < diffCount)
+            {
+                aiString path;
+                material->GetTexture(aiTextureType_DIFFUSE, i, &path);
+                diffPath = std::string(path.C_Str());
+            }
+            else
+                diffPath = "../" + DEFAULT_TEXTURE_PATH;
+
+            if(i < specCount)
+            {
+                aiString path;
+                material->GetTexture(aiTextureType_SPECULAR, i, &path);
+                specPath = std::string(path.C_Str());
+            }
+            else
+                specPath = "../" + DEFAULT_TEXTURE_PATH;
+
+            textures.push_back(ressources::get_texture(dir + diffPath, dir + specPath));
         }
     }
 

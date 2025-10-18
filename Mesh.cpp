@@ -40,13 +40,17 @@ void Mesh::init()
 /** @brief draws the mesh in the world */
 void Mesh::draw(Shader &shader)
 {
-    shader.activate(texture[0]);
+    if(texture.size() == 0)
+        ;//std::cout << "WARNING: no texture in Mesh::draw." << std::endl;
+    else
+        shader.activate(texture[0]);
+
     glBindVertexArray(VAO);
 
         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 
     glBindVertexArray(0);
-    shader.desactivate(texture[0]);
 
- //   std::cout << "\nshader done writting object" << std::endl;
+    if(texture.size() > 0)
+        shader.desactivate(texture[0]);
 }

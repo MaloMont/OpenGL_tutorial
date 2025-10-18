@@ -43,12 +43,13 @@ struct Light
     Attenuation attenuation;
 };
 
-#define nbLights 1
+#define nbLights 2
 uniform Light light[nbLights];
-
 
 uniform mat3 model_normals; // model matrix for the normal vercors
 uniform vec3 View_pos;
+
+uniform bool isLight;
 
 void main()
 {
@@ -105,6 +106,10 @@ void main()
 
         global += result;
     }
+
+    float lightPower = 0.5; // smaller => more power
+    if(isLight)
+        global = vec3( pow(global.r, lightPower), (global.g + pow(global.g, lightPower)) / 2.0, global.b );
 
     FragColor = vec4(global, 1.0);
 

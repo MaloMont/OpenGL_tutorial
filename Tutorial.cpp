@@ -107,10 +107,19 @@ void Tutorial::process_input()
  */
 void Tutorial::render_loop()
 {
-    Object backpack(ASSETS + "textures/Backpack/backpack.obj", world.get_shader(OBJ_SHADER));
+    Object grass(ASSETS + "grass/grass.obj", world.get_shader(OBJ_SHADER));
+    grass.pos = { 0.0f, -7.0f, 0.0f };
+    grass.scaling = { 10.0f, 1.0f, 10.0f };
 
-    Light light(ASSETS + "textures/Backpack/backpack.obj", world.get_shader(OBJ_SHADER), SUN_LIGHT);
-    light.pos = { 7.0f, 0.0f, 0.0f };
+    Object backpack(ASSETS + "Backpack/backpack.obj", world.get_shader(OBJ_SHADER));
+    backpack.rotation_angle = glm::radians(-90.0f);
+    backpack.pos = { 8.0f, -5.0f, 3.0f };
+
+    Light light(ASSETS + "Backpack/backpack.obj", world.get_shader(OBJ_SHADER), SUN_LIGHT);
+    light.pos = { 5.0f, -5.0f, 0.0f };
+
+    Light torch(ASSETS + "bloc/Grass_Block.obj", world.get_shader(OBJ_SHADER), SPOT_LIGHT);
+    torch.scaling = { 0.01f, 0.01f, 0.01f };
 
     glEnable(GL_DEPTH_TEST);
 
@@ -118,19 +127,23 @@ void Tutorial::render_loop()
 
     while(not glfwWindowShouldClose(window))
     {
-
         float current_frame = glfwGetTime();
         delta_time = current_frame - last_frame;
         last_frame = current_frame;
 
         process_input();
 
+        torch.pos = camera.get_pos();
+        torch.spec.direction = camera.get_direction();
+
         // rendering
         glClearColor(0.05f, 0.05f, 0.27f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         backpack.draw();
+        grass.draw();
         light.draw();
+        torch.draw();
 
         world.update_view_pos(camera.get_pos());
         world.update_shaders(camera.get_view(), camera.get_projection());

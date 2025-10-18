@@ -22,9 +22,9 @@ public:
 
     void draw();
 
-private:
-
     Light_spec spec;
+
+private:
 
     static size_t nbLights; // number of lights created
     int iLight;

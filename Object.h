@@ -18,7 +18,7 @@ public:
 
     glm::vec3 pos = {0.0f, 0.0f, 0.0f};
     glm::vec3 scaling = {1.0f, 1.0f, 1.0f};
-    glm::vec3 rotation_axis = {1.0f, 0.0f, 0.0f};
+    glm::vec3 rotation_axis = {0.0f, 1.0f, 0.0f};
     float rotation_angle = 0.0f;
 
     glm::mat4 get_model_mat4() const;

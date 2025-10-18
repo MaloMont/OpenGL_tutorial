@@ -24,7 +24,6 @@ void Light::init()
 {
     iLight = nbLights;
     ++nbLights;
-    std::cout << "init light " << iLight << " of " << iLight << std::endl;
 }
 
 
@@ -38,5 +37,9 @@ void Light::draw()
 
     shader.set_light(pos, spec, iLight);
 
+    shader.set_uniform("isLight", true);
+
     model.draw(shader);
+
+    shader.set_uniform("isLight", false);
 }
